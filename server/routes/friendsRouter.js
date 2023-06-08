@@ -10,7 +10,7 @@ friendsRouter.get('/:id', async (req, res) => {
     include: 'SubjectUsers',
   });
 
-  const friends = objectUser[0].SubjectUsers.map((item) => item.dataValues);
+  const friends = objectUser[0]?.SubjectUsers?.map((item) => item.dataValues);
 
   res.json(friends);
 });

@@ -30,7 +30,7 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setFriends } = userSlice.actions;
+export const { setFriends, setFriendsOnline } = userSlice.actions;
 
 export const getFriendsThunk =
   (userId: UserType['id']): AppThunk =>

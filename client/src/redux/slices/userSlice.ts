@@ -5,9 +5,9 @@ import type { UserEditType, UserSignUpType, UserType } from '../../types/UserTyp
 import type { AppThunk } from '../hooks';
 import { NavigateFunction } from 'react-router-dom';
 
-export type UserState = UserType & { status: boolean };
+export type UserState = UserType & { locationStatus: boolean };
 
-const initialState: UserState = { status: false };
+const initialState: UserState = { locationStatus: false };
 
 export const userSlice = createSlice({
   name: 'user',
@@ -29,8 +29,8 @@ export default userSlice.reducer;
 
 export const checkUserThunk = (): AppThunk => (dispatch) => {
   axios<UserType>('/api/user/check')
-    .then(({ data }) => dispatch(setUser({ ...data, status: true })))
-    .catch(() => dispatch(setUser({ status: false })));
+    .then(({ data }) => dispatch(setUser({ ...data, locationStatus: true })))
+    .catch(() => dispatch(setUser({ locationStatus: false })));
 };
 
 export const signUpThunk =
@@ -50,6 +50,13 @@ export const loginThunk =
   (dispatch) => {
     axios
       .post<UserType>('/api/user/login', input)
+
+      .then(({ data }) => dispatch(setUser({ ...data, locationStatus: true })))
+      .catch(() => dispatch(setUser({ locationStatus: true })));
+  };
+
+export const logoutThunk = (): AppThunk => (dispatch) => {
+  axios('/api/user/logout')
       .then(({ data }) => {
         dispatch(setUser({ ...data, status: true }));
         navigate(`/user/${data.id}`);
