@@ -6,6 +6,7 @@ export type UserType = {
   location?: string;
   about?: string;
   avatar?: string;
+  status?: boolean;
 };
 
 export type UserSignUpType = {
