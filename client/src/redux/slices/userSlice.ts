@@ -14,9 +14,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<UserState>) => action.payload,
-    editUser: (state, action: PayloadAction<UserEditType>) => {
-      action.payload;
-    },
+    editUser: (state, action: PayloadAction<UserEditType>) => action.payload,
     deleteUser: (state, action: PayloadAction<UserType['id']>) => {
       action.payload;
     },
@@ -72,7 +70,7 @@ export const editUserThunk =
   (id: UserType['id'], input: UserEditType): AppThunk =>
   (dispatch) => {
     axios
-      .put<UserType>(`/api/user/${id}/edit`, input)
+      .patch<UserType>(`/api/user/${id}/edit`, input)
       .then(({ data }) => dispatch(editUser(data)))
       .catch(() => dispatch(editUser(input)));
   };
