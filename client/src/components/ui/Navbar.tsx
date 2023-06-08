@@ -19,6 +19,7 @@ import MoreIcon from '@mui/icons-material/MoreVert';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import { useAppDispatch } from '../../redux/hooks';
 import { logoutThunk } from '../../redux/slices/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -66,11 +67,12 @@ type Props = {
 };
 
 export default function Navbar({ darkMode, toggleDarkMode }: Props) {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const logoutHandler = (): void => {
     handleMenuClose();
-    dispatch(logoutThunk());
+    dispatch(logoutThunk(navigate));
   };
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

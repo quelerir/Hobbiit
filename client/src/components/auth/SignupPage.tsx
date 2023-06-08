@@ -14,12 +14,14 @@ import { useState } from 'react';
 import { UserSignUpType } from '../../types/UserTypes';
 import { signUpThunk } from '../../redux/slices/userSlice';
 import { useAppDispatch } from '../../redux/hooks';
+import { useNavigate } from 'react-router-dom';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
 
 export default function SignupPage() {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [input, setInput] = useState<UserSignUpType>({
     firstname: '',
@@ -34,7 +36,7 @@ export default function SignupPage() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    dispatch(signUpThunk(input));
+    dispatch(signUpThunk(input, navigate));
   };
 
   return (

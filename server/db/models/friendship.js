@@ -1,26 +1,19 @@
-const { Model } = require('sequelize');
+const {
+  Model,
+} = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class FriendShip extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      FriendShip.belongsTo(models.User, { foreignKey: 'subjectUserId', as: 'SubjectUser' });
-      FriendShip.belongsTo(models.User, { foreignKey: 'objectUserId', as: 'ObjectUser' });
+  class Friendship extends Model {
+    static associate({ User }) {
+      this.belongsTo(User, { foreignKey: 'subjectuser_id' });
+      this.belongsTo(User, { foreignKey: 'objectuser_id' });
     }
   }
-  FriendShip.init(
-    {
-      subjectUserId: DataTypes.INTEGER,
-      objectUserId: DataTypes.INTEGER,
-    },
-    {
-      sequelize,
-      modelName: 'FriendShip',
-    },
-  );
-  return FriendShip;
-};
+  Friendship.init({
+    subjectuser_id: DataTypes.INTEGER,
+    objectuser_id: DataTypes.INTEGER,
+  }, {
+    sequelize,
+    modelName: 'Friendship',
+  });
+  return Friendship;
