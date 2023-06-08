@@ -8,8 +8,10 @@ import { useAppDispatch, useAppSelector } from './redux/hooks';
 import { checkUserThunk } from './redux/slices/userSlice';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import { SOCKET_INIT } from './types/wsTypes';
 
 function App(): JSX.Element {
+  const user = useAppSelector((store) => store.user);
   const dispatch = useAppDispatch();
 
   const [darkMode, setDarkMode] = useState(() => {
@@ -24,6 +26,13 @@ function App(): JSX.Element {
   useEffect(() => {
     localStorage.setItem('darkMode', JSON.stringify(darkMode));
   }, [darkMode]);
+
+  useEffect(() => {
+    if (user.id) {
+      dispatch({ type: SOCKET_INIT });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user.id]);
 
   const toggleDarkMode = () => {
     setDarkMode((prevMode: any) => !prevMode);
