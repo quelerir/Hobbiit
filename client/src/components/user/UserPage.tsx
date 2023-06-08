@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from '../ui/Navbar';
 import {
   Container,
@@ -10,9 +10,18 @@ import {
   Stack,
   Avatar,
   Grid,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
 } from '@mui/material';
 import { UserType } from '../../types/UserTypes';
 import EditUserForm from './EditUserForm';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { getFriendsThunk } from '../../redux/slices/friendsSlice';
+import { getUserName } from '../utils/getUserName';
+import BadgeAvatar from '../ui/BadgeAvatar';
+import emojis from '../utils/emojis';
 
 type Props = {
   darkMode: boolean;
@@ -22,6 +31,16 @@ type Props = {
 
 export default function UserPage({ darkMode, toggleDarkMode, user }: Props): JSX.Element {
   const [isEdit, setIsEdit] = useState(true);
+
+  const userSelector = useAppSelector((store) => store.user);
+  const { friendsList = [], friendsOnline = [] } = useAppSelector((store) => store.friends);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getFriendsThunk(userSelector.id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userSelector.id]);
+
   return (
     <div>
       <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
@@ -63,6 +82,31 @@ export default function UserPage({ darkMode, toggleDarkMode, user }: Props): JSX
                 <Typography sx={{ fontSize: 18, fontWeight: 'bold', textTransform: 'uppercase' }}>
                   Friends
                 </Typography>
+                <Grid item xs={3}>
+                  <List>
+                    {friendsList.map((friend) => {
+                      const emojiKey = friend?.status || 'happy';
+                      const friendName = getUserName(friend.email);
+                      const isOnline = friendsOnline.map((el) => el.id).includes(friend.id);
+                      return (
+                        <ListItem key={friend.id}>
+                          <ListItemAvatar>
+                            <BadgeAvatar
+                              alt={`${friendName}`}
+                              src={`/images/${friendName}.jpeg`}
+                              isOnline={isOnline}
+                            />
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={`${friend?.firstname + ' ' + friend?.lastname || ''} ${
+                              emojis[emojiKey]
+                            }`}
+                          />
+                        </ListItem>
+                      );
+                    })}
+                  </List>
+                </Grid>
               </CardContent>
             </Card>
           </Grid>

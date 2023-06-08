@@ -7,6 +7,8 @@ wss.on('connection', (ws, request, wsMap) => {
   const { id } = request.session.user;
   wsMap.set(id, { ws, user: request.session.user });
 
+  console.log({wsMap})
+
   for (const [, wsClient] of wsMap) {
     wsClient.ws.send(
       JSON.stringify({
