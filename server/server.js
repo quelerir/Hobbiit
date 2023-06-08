@@ -59,4 +59,4 @@ server.on('upgrade', (request, socket, head) => {
   });
 });
 
-app.listen(PORT, () => console.log(`Server has started on PORT ${PORT}`));
+server.listen(PORT, () => console.log(`Server has started on PORT ${PORT}`));

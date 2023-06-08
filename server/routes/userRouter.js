@@ -62,7 +62,7 @@ userRouter.get('/check', (req, res) => {
 
 userRouter.get('/logout', (req, res) => {
   req.session.destroy();
-  res.clearCookie('sid').sendStatus(200);
+  res.clearCookie('sid_socket').sendStatus(200);
 });
 
 module.exports = userRouter;

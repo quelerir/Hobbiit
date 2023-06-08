@@ -26,29 +26,7 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
   return (
     <div>
       <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-      <Container maxWidth="lg">
-        <Grid item xs={3}>
-          <List>
-            {friendsList.map((friend) => {
-              const emojiKey = friend?.status || 'happy';
-              const friendName = getUserName(friend.email);
-              const isOnline = friendsOnline.map((el) => el.id).includes(friend.id);
-              return (
-                <ListItem key={friend.id}>
-                  <ListItemAvatar>
-                    <BadgeAvatar
-                      alt={`${friendName}`}
-                      src={`/images/${friendName}.jpeg`}
-                      isOnline={isOnline}
-                    />
-                  </ListItemAvatar>
-                  <ListItemText primary={`${friend?.firstname || ''}`} />
-                </ListItem>
-              );
-            })}
-          </List>
-        </Grid>
-      </Container>
+      <Container maxWidth="lg">a</Container>
     </div>
   );
 }
