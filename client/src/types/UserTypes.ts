@@ -18,6 +18,13 @@ export type UserSignUpType = {
   avatar?: string;
 };
 
+export type UserEditType = {
+  firstname?: string;
+  lastname?: string;
+  location?: string;
+  about?: string;
+};
+
 export type UserHandlersType = {
   e: React.FormEvent<HTMLFormElement>;
   input: UserSignUpType;

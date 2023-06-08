@@ -12,6 +12,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 function App(): JSX.Element {
   const dispatch = useAppDispatch();
 
+  const user = useAppSelector((state) => state.user);
+
   const [darkMode, setDarkMode] = useState(() => {
     const storedMode = localStorage.getItem('darkMode');
     return storedMode ? JSON.parse(storedMode) : false;
@@ -37,21 +39,21 @@ function App(): JSX.Element {
 
   return (
     <div className="App">
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Routes>
-            <Route path="/" element={<AboutPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-            <Route
-              path="/user/:id"
-              element={<UserPage darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
-            />
-            <Route
-              path="/tread/:id"
-              element={<TreadPage darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
-            />
-          </Routes>
-        </ThemeProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Routes>
+          <Route path="/" element={<AboutPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route
+            path="/user/:id"
+            element={<UserPage user={user} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
+          />
+          <Route
+            path="/tread/:id"
+            element={<TreadPage darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
+          />
+        </Routes>
+      </ThemeProvider>
     </div>
   );
 }
