@@ -1,5 +1,17 @@
 import React from 'react';
+import Navbar from '../ui/Navbar';
+import { Container } from '@mui/material';
 
-export default function UserPage(): JSX.Element {
-  return <div>UserPage</div>;
+type Props = {
+  darkMode: boolean;
+  toggleDarkMode: () => void;
+};
+
+export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Element {
+  return (
+    <div>
+      <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+      <Container maxWidth="lg">UserPage</Container>
+    </div>
+  );
 }
