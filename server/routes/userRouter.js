@@ -62,7 +62,47 @@ userRouter.get('/check', (req, res) => {
 
 userRouter.get('/logout', (req, res) => {
   req.session.destroy();
-  res.clearCookie('sid').sendStatus(200);
+  res.clearCookie('sid_socket').sendStatus(200);
+});
+
+userRouter.put('/:id/edit', async (req, res) => {
+  const { id, firstname, lastname, location, about } = req.body;
+
+  try {
+    const updatedUser = await User.update(
+      {
+        firstname,
+        lastname,
+        location,
+        about,
+      },
+      { where: { id } },
+    );
+    if (!updatedUser) {
+      return res.sendStatus(404);
+    }
+    return res.sendStatus(200);
+  } catch (e) {
+    console.log(e);
+    return res.sendStatus(500);
+  }
+});
+
+userRouter.delete('/delete/:id', async (req, res) => {
+  const { id } = req.body;
+  if (id) {
+    try {
+      const deletedUser = await User.destroy({ where: { id } });
+      if (deletedUser === 0) {
+        return res.sendStatus(404);
+      }
+      return res.sendStatus(200);
+    } catch (e) {
+      console.log(e);
+      return res.sendStatus(500);
+    }
+  }
+  return res.sendStatus(400);
 });
 
 module.exports = userRouter;
