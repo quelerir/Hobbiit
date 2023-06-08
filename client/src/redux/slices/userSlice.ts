@@ -39,10 +39,10 @@ export const signUpThunk =
     axios
       .post<UserType>('/api/user/signup', input)
       .then(({ data }) => {
-        dispatch(setUser({ ...data, status: true }));
+        dispatch(setUser({ ...data, locationStatus: true }));
         navigate(`/user/${data.id}`);
       })
-      .catch(() => dispatch(setUser({ status: true })));
+      .catch(() => dispatch(setUser({ locationStatus: true })));
   };
 
 export const loginThunk =
@@ -50,18 +50,11 @@ export const loginThunk =
   (dispatch) => {
     axios
       .post<UserType>('/api/user/login', input)
-
-      .then(({ data }) => dispatch(setUser({ ...data, locationStatus: true })))
-      .catch(() => dispatch(setUser({ locationStatus: true })));
-  };
-
-export const logoutThunk = (): AppThunk => (dispatch) => {
-  axios('/api/user/logout')
       .then(({ data }) => {
-        dispatch(setUser({ ...data, status: true }));
+        dispatch(setUser({ ...data, locationStatus: true }));
         navigate(`/user/${data.id}`);
       })
-      .catch(() => dispatch(setUser({ status: true })));
+      .catch(() => dispatch(setUser({ locationStatus: true })));
   };
 
 export const logoutThunk =
@@ -69,10 +62,10 @@ export const logoutThunk =
   (dispatch) => {
     axios('/api/user/logout')
       .then(() => {
-        dispatch(setUser({ status: true }));
+        dispatch(setUser({ locationStatus: true }));
         navigate('/');
       })
-      .catch(() => dispatch(setUser({ status: true })));
+      .catch(() => dispatch(setUser({ locationStatus: true })));
   };
 
 export const editUserThunk =

@@ -14,17 +14,18 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useAppDispatch } from '../../redux/hooks';
 import { loginThunk } from '../../redux/slices/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export default function AboutPage() {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    dispatch(loginThunk(Object.fromEntries(new FormData(event.currentTarget))));
-    
+    dispatch(loginThunk(Object.fromEntries(new FormData(event.currentTarget)), navigate));
   };
 
   return (

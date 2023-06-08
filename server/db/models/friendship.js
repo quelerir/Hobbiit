@@ -1,19 +1,21 @@
-const {
-  Model,
-} = require('sequelize');
+const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class Friendship extends Model {
-    static associate({ User }) {
-      this.belongsTo(User, { foreignKey: 'subjectuser_id' });
-      this.belongsTo(User, { foreignKey: 'objectuser_id' });
+  class FriendShip extends Model {
+    static associate(models) {
+      FriendShip.belongsTo(models.User, { foreignKey: 'subjectUserId', as: 'SubjectUser' });
+      FriendShip.belongsTo(models.User, { foreignKey: 'objectUserId', as: 'ObjectUser' });
     }
   }
-  Friendship.init({
-    subjectuser_id: DataTypes.INTEGER,
-    objectuser_id: DataTypes.INTEGER,
-  }, {
-    sequelize,
-    modelName: 'Friendship',
-  });
-  return Friendship;
+  FriendShip.init(
+    {
+      subjectuser_id: DataTypes.INTEGER,
+      objectuser_id: DataTypes.INTEGER,
+    },
+    {
+      sequelize,
+      modelName: 'Friendship',
+    },
+  );
+  return FriendShip;
+};

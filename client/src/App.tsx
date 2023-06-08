@@ -14,8 +14,6 @@ function App(): JSX.Element {
   const user = useAppSelector((store) => store.user);
   const dispatch = useAppDispatch();
 
-  const user = useAppSelector((state) => state.user);
-
   const [darkMode, setDarkMode] = useState(() => {
     const storedMode = localStorage.getItem('darkMode');
     return storedMode ? JSON.parse(storedMode) : false;
