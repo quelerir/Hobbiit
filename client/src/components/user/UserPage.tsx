@@ -66,7 +66,6 @@ export default function UserPage({ darkMode, toggleDarkMode, user }: Props): JSX
               </CardContent>
             </Card>
           </Grid>
-        </Grid>
       </Container>
     </div>
   );
