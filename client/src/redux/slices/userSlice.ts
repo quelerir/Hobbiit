@@ -3,6 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import type { UserSignUpType, UserType } from '../../types/UserTypes';
 import type { AppThunk } from '../hooks';
+import { NavigateFunction } from 'react-router-dom';
 
 export type UserState = UserType & { status: boolean };
 
@@ -27,25 +28,36 @@ export const checkUserThunk = (): AppThunk => (dispatch) => {
 };
 
 export const signUpThunk =
-  (input: UserSignUpType): AppThunk =>
+  (input: UserSignUpType, navigate: NavigateFunction): AppThunk =>
   (dispatch) => {
     axios
       .post<UserType>('/api/user/signup', input)
-      .then(({ data }) => dispatch(setUser({ ...data, status: true })))
+      .then(({ data }) => {
+        dispatch(setUser({ ...data, status: true }));
+        navigate(`/user/${data.id}`);
+      })
       .catch(() => dispatch(setUser({ status: true })));
   };
 
 export const loginThunk =
-  (input: UserSignUpType): AppThunk =>
+  (input: UserSignUpType, navigate: NavigateFunction): AppThunk =>
   (dispatch) => {
     axios
       .post<UserType>('/api/user/login', input)
-      .then(({ data }) => dispatch(setUser({ ...data, status: true })))
+      .then(({ data }) => {
+        dispatch(setUser({ ...data, status: true }));
+        navigate(`/user/${data.id}`);
+      })
       .catch(() => dispatch(setUser({ status: true })));
   };
 
-export const logoutThunk = (): AppThunk => (dispatch) => {
-  axios('/api/user/logout')
-    .then(() => dispatch(setUser({ status: true })))
-    .catch(() => dispatch(setUser({ status: true })));
-};
+export const logoutThunk =
+  (navigate: NavigateFunction): AppThunk =>
+  (dispatch) => {
+    axios('/api/user/logout')
+      .then(() => {
+        dispatch(setUser({ status: true }));
+        navigate('/');
+      })
+      .catch(() => dispatch(setUser({ status: true })));
+  };
