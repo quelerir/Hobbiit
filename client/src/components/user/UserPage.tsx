@@ -16,8 +16,6 @@ import {
 import EditUserForm from './EditUserForm';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { getFriendsThunk } from '../../redux/slices/friendsSlice';
-import emojis from '../utils/emojis';
-import { UPDATE_STATUS } from '../../types/wsTypes';
 import DeleteUserModal from './DeleteUserModal';
 import FriendsList from '../ui/FriendsList';
 import emojis from '../utils/emojis';
