@@ -25,6 +25,7 @@ import { getUserName } from '../utils/getUserName';
 import BadgeAvatar from '../ui/BadgeAvatar';
 import emojis from '../utils/emojis';
 import { UPDATE_STATUS } from '../../types/wsTypes';
+import { setMessageThunk } from '../../redux/slices/chatSlice';
 
 type Props = {
   darkMode: boolean;
