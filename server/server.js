@@ -9,6 +9,7 @@ const userRouter = require('./routes/userRouter');
 
 const wss = require('./webSocket');
 const friendsRouter = require('./routes/friendsRouter');
+const treadsRouter = require('./routes/treadsRouter');
 require('dotenv').config();
 
 const app = express();
@@ -36,6 +37,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/user', userRouter);
 app.use('/api/friends', friendsRouter);
+app.use('/api/tread', treadsRouter);
 
 const server = http.createServer(app);
 
