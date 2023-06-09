@@ -60,11 +60,11 @@ userRouter.get('/check', (req, res) => {
   return res.sendStatus(401);
 });
 
-userRouter.get('/actual/:id', (req, res) => {
-  const { id } = req.params;
-  const actualUser = User.findOne({ where: { id } });
-  res.json(actualUser);
-});
+// userRouter.get('/actual/:id', (req, res) => {
+//   const { id } = req.params;
+//   const actualUser = User.findOne({ where: { id } });
+//   res.json(actualUser);
+// });
 
 userRouter.get('/logout', (req, res) => {
   req.session.destroy();
