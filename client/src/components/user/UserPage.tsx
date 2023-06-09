@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../ui/Navbar';
 import {
+  Box,
   Container,
   Button,
   Card,
@@ -11,7 +12,6 @@ import {
   Avatar,
   Grid,
   Popover,
-  Box,
 } from '@mui/material';
 import EditUserForm from './EditUserForm';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
