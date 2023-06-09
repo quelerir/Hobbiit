@@ -34,6 +34,7 @@ export default function EditUserForm({ user, setIsEdit }: Props): JSX.Element {
     e.preventDefault();
     dispatch(editUserThunk(Number(id), input));
     setInput({ firstname: '', lastname: '', location: '', about: '' });
+    setIsEdit(true);
   };
 
   return (
@@ -78,14 +79,7 @@ export default function EditUserForm({ user, setIsEdit }: Props): JSX.Element {
         multiline
         placeholder={user.about}
       />
-      <Button
-        sx={{ mt: 2 }}
-        variant="contained"
-        color="success"
-        size="large"
-        type="submit"
-        onClick={() => setIsEdit(false)}
-      >
+      <Button sx={{ mt: 2 }} variant="contained" color="success" size="large" type="submit">
         Save changes
       </Button>
     </Box>

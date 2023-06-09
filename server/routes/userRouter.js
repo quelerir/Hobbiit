@@ -60,6 +60,12 @@ userRouter.get('/check', (req, res) => {
   return res.sendStatus(401);
 });
 
+userRouter.get('/actual/:id', (req, res) => {
+  const { id } = req.params;
+  const actualUser = User.findOne({ where: { id } });
+  res.json(actualUser);
+});
+
 userRouter.get('/logout', (req, res) => {
   req.session.destroy();
   res.clearCookie('sid_socket').sendStatus(200);
@@ -79,12 +85,21 @@ userRouter.patch('/:id/edit', async (req, res) => {
       },
       { where: { id } },
     );
-    const user = await User.findOne({ where: { id } });
     if (!updatedUser) {
       return res.sendStatus(400);
     }
-    console.log(user);
-    return res.json(user);
+    const editedUser = await User.findOne({ where: { id } });
+
+    // req.session.user = user;
+    // req.session.save();
+    // console.log(user);
+
+    const { user } = req.session;
+    user.firstname = firstname;
+    user.lastname = lastname;
+    user.location = location;
+    user.about = about;
+    return res.json(editedUser);
   } catch (e) {
     console.log(e);
     return res.sendStatus(500);
@@ -99,7 +114,8 @@ userRouter.delete('/delete/:id', async (req, res) => {
       if (deletedUser === 0) {
         return res.sendStatus(404);
       }
-      return res.sendStatus(200);
+      req.session.destroy();
+      res.clearCookie('sid_socket').sendStatus(200);
     } catch (e) {
       console.log(e);
       return res.sendStatus(500);

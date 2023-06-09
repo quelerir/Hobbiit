@@ -15,31 +15,31 @@ import {
   ListItemAvatar,
   ListItemText,
 } from '@mui/material';
-import { UserType } from '../../types/UserTypes';
 import EditUserForm from './EditUserForm';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { getFriendsThunk } from '../../redux/slices/friendsSlice';
 import { getUserName } from '../utils/getUserName';
 import BadgeAvatar from '../ui/BadgeAvatar';
 import emojis from '../utils/emojis';
+import { useParams } from 'react-router-dom';
 
 type Props = {
   darkMode: boolean;
   toggleDarkMode: () => void;
-  user: UserType;
 };
 
-export default function UserPage({ darkMode, toggleDarkMode, user }: Props): JSX.Element {
+export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Element {
   const [isEdit, setIsEdit] = useState(true);
 
-  const userSelector = useAppSelector((store) => store.user);
+  const user = useAppSelector((store) => store.user);
+  const { id } = useParams();
   const { friendsList = [], friendsOnline = [] } = useAppSelector((store) => store.friends);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getFriendsThunk(userSelector.id));
+    dispatch(getFriendsThunk(user.id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userSelector.id]);
+  }, [user.id]);
 
   return (
     <div>
