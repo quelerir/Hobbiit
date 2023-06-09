@@ -20,9 +20,6 @@ import emojis from '../utils/emojis';
 import { UPDATE_STATUS } from '../../types/wsTypes';
 import DeleteUserModal from './DeleteUserModal';
 import FriendsList from '../ui/FriendsList';
-import emojis from '../utils/emojis';
-import { UPDATE_STATUS } from '../../types/wsTypes';
-
 
 type Props = {
   darkMode: boolean;
