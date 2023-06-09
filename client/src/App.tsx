@@ -54,7 +54,7 @@ function App(): JSX.Element {
           <Route path="/signup" element={<SignupPage />} />
           <Route
             path="/user/:id"
-            element={<UserPage user={user} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
+            element={<UserPage darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
           />
           <Route
             path="/tread/:id"

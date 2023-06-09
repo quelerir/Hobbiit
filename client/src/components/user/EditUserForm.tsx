@@ -18,10 +18,10 @@ export default function EditUserForm({ user, setIsEdit }: Props): JSX.Element {
   console.log(params);
 
   const [input, setInput] = useState<UserEditType>({
-    firstname: '',
-    lastname: '',
-    location: '',
-    about: '',
+    firstname: user.firstname,
+    lastname: user.lastname,
+    location: user.location,
+    about: user.about,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -33,7 +33,8 @@ export default function EditUserForm({ user, setIsEdit }: Props): JSX.Element {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     dispatch(editUserThunk(Number(id), input));
-    setInput({ firstname: '', lastname: '', location: '', about: '' });
+    // setInput({ firstname: '', lastname: '', location: '', about: '' });
+    setIsEdit(true);
   };
 
   return (
@@ -47,45 +48,38 @@ export default function EditUserForm({ user, setIsEdit }: Props): JSX.Element {
       autoComplete="off"
     >
       <TextField
+        value={input.firstname}
         onChange={handleChange}
         name="firstname"
         id="outlined-textarea"
         label="firstname"
         multiline
-        placeholder={user.firstname}
       />
       <TextField
+        value={input.lastname}
         onChange={handleChange}
         name="lastname"
         id="outlined-textarea"
         label="lastname"
         multiline
-        placeholder={user.lastname}
       />
       <TextField
+        value={input.location}
         onChange={handleChange}
         name="location"
         id="outlined-textarea"
         label="location"
         multiline
-        placeholder={user.location}
       />
       <TextField
+        value={input.about}
         onChange={handleChange}
         name="about"
         id="outlined-textarea"
         label="about"
         multiline
-        placeholder={user.about}
       />
-      <Button
-        sx={{ mt: 2 }}
-        variant="contained"
-        color="success"
-        size="large"
-        type="submit"
-        onClick={() => setIsEdit(false)}
-      >
+      <Button sx={{ mt: 2 }} variant="contained" color="success" size="large" type="submit">
         Save changes
       </Button>
     </Box>

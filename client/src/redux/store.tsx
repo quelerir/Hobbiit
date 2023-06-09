@@ -4,6 +4,7 @@ import userReducer from './slices/userSlice';
 import rootSaga from './sagas/rootSaga';
 import friendsReducer from './slices/friendsSlice';
 import chatReducer from './slices/chatSlice';
+import treadReducer from './slices/treadsSlice'
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -12,6 +13,7 @@ export const store = configureStore({
     user: userReducer,
     friends: friendsReducer,
     UserMessage: chatReducer,
+    tread: treadReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(sagaMiddleware),
 });

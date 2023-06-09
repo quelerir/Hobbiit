@@ -20,6 +20,7 @@ import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import { useAppDispatch } from '../../redux/hooks';
 import { logoutThunk } from '../../redux/slices/userSlice';
 import { useNavigate } from 'react-router-dom';
+import '../../../public/fonts.css';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -177,9 +178,12 @@ export default function Navbar({ darkMode, toggleDarkMode }: Props) {
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
+            sx={{ display: { xs: 'none', sm: 'block' }, 
+            fontFamily: 'Alana Pro RUS, sans-serif',
+            fontSize: '28px',
+            marginTop: '17px'}}
           >
-            Hobby it
+            HobbyIt
           </Typography>
           <Search>
             <SearchIconWrapper>
