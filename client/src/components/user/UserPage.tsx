@@ -10,18 +10,12 @@ import {
   Stack,
   Avatar,
   Grid,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
 } from '@mui/material';
 import { UserType } from '../../types/UserTypes';
 import EditUserForm from './EditUserForm';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { getFriendsThunk } from '../../redux/slices/friendsSlice';
-import { getUserName } from '../utils/getUserName';
-import BadgeAvatar from '../ui/BadgeAvatar';
-import emojis from '../utils/emojis';
+import FriendsList from '../ui/FriendsList';
 
 type Props = {
   darkMode: boolean;
@@ -77,38 +71,7 @@ export default function UserPage({ darkMode, toggleDarkMode, user }: Props): JSX
             )}
           </Grid>
           <Grid item xs={4}>
-            <Card sx={{ minWidth: 375, maxWidth: 375, height: '85vh' }}>
-              <CardContent>
-                <Typography sx={{ fontSize: 18, fontWeight: 'bold', textTransform: 'uppercase' }}>
-                  Friends
-                </Typography>
-                <Grid item xs={3}>
-                  <List>
-                    {friendsList.map((friend) => {
-                      const emojiKey = friend?.status || 'happy';
-                      const friendName = getUserName(friend.email);
-                      const isOnline = friendsOnline.map((el) => el.id).includes(friend.id);
-                      return (
-                        <ListItem key={friend.id}>
-                          <ListItemAvatar>
-                            <BadgeAvatar
-                              alt={`${friendName}`}
-                              src={`/images/${friendName}.jpeg`}
-                              isOnline={isOnline}
-                            />
-                          </ListItemAvatar>
-                          <ListItemText
-                            primary={`${friend?.firstname + ' ' + friend?.lastname || ''} ${
-                              emojis[emojiKey]
-                            }`}
-                          />
-                        </ListItem>
-                      );
-                    })}
-                  </List>
-                </Grid>
-              </CardContent>
-            </Card>
+            <FriendsList />
           </Grid>
         </Grid>
       </Container>
