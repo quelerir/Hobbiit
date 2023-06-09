@@ -18,6 +18,16 @@ module.exports = (sequelize, DataTypes) => {
         as: 'ObjectUsers',
         foreignKey: 'objectuser_id',
       });
+      this.belongsToMany(User, {
+        through: 'Messages',
+        as: 'SubjectChatUsers',
+        foreignKey: 'subjectchatuser_id',
+      });
+      this.belongsToMany(User, {
+        through: 'Messages',
+        as: 'ObjectChatUsers',
+        foreignKey: 'objectchatuser_id',
+      });
     }
   }
   User.init(
