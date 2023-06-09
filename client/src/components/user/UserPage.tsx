@@ -14,6 +14,8 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  Box,
+  Popover,
 } from '@mui/material';
 import { UserType } from '../../types/UserTypes';
 import EditUserForm from './EditUserForm';
@@ -22,6 +24,7 @@ import { getFriendsThunk } from '../../redux/slices/friendsSlice';
 import { getUserName } from '../utils/getUserName';
 import BadgeAvatar from '../ui/BadgeAvatar';
 import emojis from '../utils/emojis';
+import { UPDATE_STATUS } from '../../types/wsTypes';
 
 type Props = {
   darkMode: boolean;
@@ -30,7 +33,12 @@ type Props = {
 };
 
 export default function UserPage({ darkMode, toggleDarkMode, user }: Props): JSX.Element {
+  const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
   const [isEdit, setIsEdit] = useState(true);
+
+  const handleClick = (status: string): void => {
+    dispatch({ type: UPDATE_STATUS, payload: { status } });
+  };
 
   const userSelector = useAppSelector((store) => store.user);
   const { friendsList = [], friendsOnline = [] } = useAppSelector((store) => store.friends);
@@ -50,7 +58,29 @@ export default function UserPage({ darkMode, toggleDarkMode, user }: Props): JSX
             {isEdit ? (
               <Card sx={{ minWidth: 275, maxWidth: 775 }}>
                 <Stack sx={{ mt: 2, ml: 2 }}>
-                  <Avatar alt="Remy Sharp" src={`${user.avatar}`} sx={{ width: 56, height: 56 }} />
+                  <Avatar onClick={(e: React.MouseEvent<HTMLDivElement>) => setAnchorEl(e.currentTarget)} alt="Remy Sharp" src={`${user.avatar}`} sx={{ width: 56, height: 56 }} />
+                  <Popover
+                id="avatarPopover"
+                open={!!anchorEl}
+                anchorEl={anchorEl}
+                onClose={() => setAnchorEl(null)}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center',
+                }}
+              >
+                <Box display="flex" flexDirection="column">
+                  {Object.entries(emojis).map((el) => (
+                    <Button key={el[0]} onClick={() => handleClick(el[0])}>
+                      {el[1]}
+                    </Button>
+                  ))}
+                </Box>
+              </Popover>
                 </Stack>
                 <CardContent>
                   <Typography
