@@ -9,13 +9,19 @@ import {
   Typography,
   Stack,
   Avatar,
-  Grid
+  Grid,
+  Popover,
+  Box
+
 } from '@mui/material';
 import { UserType } from '../../types/UserTypes';
 import EditUserForm from './EditUserForm';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { getFriendsThunk } from '../../redux/slices/friendsSlice';
 import FriendsList from '../ui/FriendsList';
+import emojis from '../utils/emojis';
+import { UPDATE_STATUS } from '../../types/wsTypes';
+
 
 type Props = {
   darkMode: boolean;
