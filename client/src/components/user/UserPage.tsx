@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../ui/Navbar';
 import {
+  Box,
   Container,
   Button,
   Card,
@@ -11,13 +12,13 @@ import {
   Avatar,
   Grid,
   Popover,
-  Box
-
 } from '@mui/material';
-import { UserType } from '../../types/UserTypes';
 import EditUserForm from './EditUserForm';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { getFriendsThunk } from '../../redux/slices/friendsSlice';
+import emojis from '../utils/emojis';
+import { UPDATE_STATUS } from '../../types/wsTypes';
+import DeleteUserModal from './DeleteUserModal';
 import FriendsList from '../ui/FriendsList';
 import emojis from '../utils/emojis';
 import { UPDATE_STATUS } from '../../types/wsTypes';
@@ -26,10 +27,9 @@ import { UPDATE_STATUS } from '../../types/wsTypes';
 type Props = {
   darkMode: boolean;
   toggleDarkMode: () => void;
-  user: UserType;
 };
 
-export default function UserPage({ darkMode, toggleDarkMode, user }: Props): JSX.Element {
+export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Element {
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
   const [isEdit, setIsEdit] = useState(true);
 
@@ -42,9 +42,9 @@ export default function UserPage({ darkMode, toggleDarkMode, user }: Props): JSX
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getFriendsThunk(userSelector.id));
+    dispatch(getFriendsThunk(userSelector?.id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userSelector.id]);
+  }, [userSelector?.id]);
 
   return (
     <div>
@@ -55,29 +55,34 @@ export default function UserPage({ darkMode, toggleDarkMode, user }: Props): JSX
             {isEdit ? (
               <Card sx={{ minWidth: 275, maxWidth: 775 }}>
                 <Stack sx={{ mt: 2, ml: 2 }}>
-                  <Avatar onClick={(e: React.MouseEvent<HTMLDivElement>) => setAnchorEl(e.currentTarget)} alt="Remy Sharp" src={`${user.avatar}`} sx={{ width: 56, height: 56 }} />
+                  <Avatar
+                    onClick={(e: React.MouseEvent<HTMLDivElement>) => setAnchorEl(e.currentTarget)}
+                    alt="Remy Sharp"
+                    src={`${userSelector?.avatar}`}
+                    sx={{ width: 56, height: 56 }}
+                  />
                   <Popover
-                id="avatarPopover"
-                open={!!anchorEl}
-                anchorEl={anchorEl}
-                onClose={() => setAnchorEl(null)}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'center',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'center',
-                }}
-              >
-                <Box display="flex" flexDirection="column">
-                  {Object.entries(emojis).map((el) => (
-                    <Button key={el[0]} onClick={() => handleClick(el[0])}>
-                      {el[1]}
-                    </Button>
-                  ))}
-                </Box>
-              </Popover>
+                    id="avatarPopover"
+                    open={!!anchorEl}
+                    anchorEl={anchorEl}
+                    onClose={() => setAnchorEl(null)}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'center',
+                    }}
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'center',
+                    }}
+                  >
+                    <Box display="flex" flexDirection="column">
+                      {Object.entries(emojis).map((el) => (
+                        <Button key={el[0]} onClick={() => handleClick(el[0])}>
+                          {el[1]}
+                        </Button>
+                      ))}
+                    </Box>
+                  </Popover>
                 </Stack>
                 <CardContent>
                   <Typography
@@ -85,22 +90,21 @@ export default function UserPage({ darkMode, toggleDarkMode, user }: Props): JSX
                     color="text.primary"
                     gutterBottom
                   >
-                    {`${user.firstname} ${user.lastname}`}
+                    {`${userSelector.firstname} ${userSelector.lastname}`}
                   </Typography>
                   <Typography variant="h5" component="div"></Typography>
                   <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    {user.location}
+                    {userSelector.location}
                   </Typography>
-                  <Typography variant="body2">{user.about}</Typography>
+                  <Typography variant="body2">{userSelector.about}</Typography>
                   <CardActions>
-                    <Button size="small" onClick={() => setIsEdit(false)}>
-                      Edit profile
-                    </Button>
+                    <Button onClick={() => setIsEdit(false)}>Edit profile</Button>
+                    <DeleteUserModal />
                   </CardActions>
                 </CardContent>
               </Card>
             ) : (
-              <EditUserForm setIsEdit={setIsEdit} user={user} />
+              <EditUserForm setIsEdit={setIsEdit} user={userSelector} />
             )}
           </Grid>
           <Grid item xs={4}>

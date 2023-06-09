@@ -54,7 +54,7 @@ userRouter.post('/login', async (req, res) => {
 });
 
 userRouter.get('/check', (req, res) => {
-  if (req.session.user) {
+  if (req.session?.user) {
     return res.json(req.session.user);
   }
   return res.sendStatus(401);
@@ -65,8 +65,9 @@ userRouter.get('/logout', (req, res) => {
   res.clearCookie('sid_socket').sendStatus(200);
 });
 
-userRouter.put('/:id/edit', async (req, res) => {
-  const { id, firstname, lastname, location, about } = req.body;
+userRouter.patch('/:id/edit', async (req, res) => {
+  const { firstname, lastname, location, about } = req.body;
+  const { id } = req.params;
 
   try {
     const updatedUser = await User.update(
@@ -79,9 +80,20 @@ userRouter.put('/:id/edit', async (req, res) => {
       { where: { id } },
     );
     if (!updatedUser) {
-      return res.sendStatus(404);
+      return res.sendStatus(400);
     }
-    return res.sendStatus(200);
+    const editedUser = await User.findOne({ where: { id } });
+
+    // req.session.user = user;
+    // req.session.save();
+    // console.log(user);
+
+    const { user } = req.session;
+    user.firstname = firstname;
+    user.lastname = lastname;
+    user.location = location;
+    user.about = about;
+    return res.json(editedUser);
   } catch (e) {
     console.log(e);
     return res.sendStatus(500);
@@ -89,14 +101,15 @@ userRouter.put('/:id/edit', async (req, res) => {
 });
 
 userRouter.delete('/delete/:id', async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.params;
   if (id) {
     try {
       const deletedUser = await User.destroy({ where: { id } });
       if (deletedUser === 0) {
         return res.sendStatus(404);
       }
-      return res.sendStatus(200);
+      req.session.destroy();
+      return res.clearCookie('sid_socket').sendStatus(200);
     } catch (e) {
       console.log(e);
       return res.sendStatus(500);
