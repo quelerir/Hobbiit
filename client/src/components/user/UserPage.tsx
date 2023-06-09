@@ -18,9 +18,6 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { getFriendsThunk } from '../../redux/slices/friendsSlice';
 import DeleteUserModal from './DeleteUserModal';
 import FriendsList from '../ui/FriendsList';
-import emojis from '../utils/emojis';
-import { UPDATE_STATUS } from '../../types/wsTypes';
-
 
 type Props = {
   darkMode: boolean;
