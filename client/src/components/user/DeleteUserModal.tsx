@@ -1,5 +1,8 @@
 import { Box, Button, Modal } from '@mui/material';
 import React, { useState } from 'react';
+import { deleteUserThunk } from '../../redux/slices/userSlice';
+import { useAppDispatch } from '../../redux/hooks';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -15,22 +18,31 @@ const style = {
   pb: 3,
 };
 
-type Props = {
-  deleteHandler: () => void;
-};
-
-export default function DeleteUserModal({ deleteHandler }: Props) {
+export default function DeleteUserModal() {
   const [open, setOpen] = useState(false);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const params = useParams();
+  const id = params.id;
+
   const handleOpen = () => {
     setOpen(true);
   };
+
   const handleClose = () => {
     setOpen(false);
   };
 
+  const deleteHandler = () => {
+    dispatch(deleteUserThunk(Number(id), navigate));
+  };
+
   return (
     <div>
-      <Button onClick={handleOpen}>Open modal</Button>
+      <Button color="error" onClick={handleOpen}>
+        Delete profile
+      </Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -38,11 +50,9 @@ export default function DeleteUserModal({ deleteHandler }: Props) {
         aria-describedby="parent-modal-description"
       >
         <Box sx={{ ...style, width: 400 }}>
-          <h2 id="parent-modal-title">Text in a modal</h2>
-          <p id="parent-modal-description">
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </p>
-          <Button onClick={() => deleteHandler()}>Yes</Button>
+          <h2 id="parent-modal-title">Danger! Delete User</h2>
+          <p id="parent-modal-description">Are you sure you want to delete your account?</p>
+          <Button onClick={deleteHandler}>Yes</Button>
           <Button onClick={handleClose}>No</Button>
         </Box>
       </Modal>

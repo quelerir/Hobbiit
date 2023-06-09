@@ -60,12 +60,6 @@ userRouter.get('/check', (req, res) => {
   return res.sendStatus(401);
 });
 
-// userRouter.get('/actual/:id', (req, res) => {
-//   const { id } = req.params;
-//   const actualUser = User.findOne({ where: { id } });
-//   res.json(actualUser);
-// });
-
 userRouter.get('/logout', (req, res) => {
   req.session.destroy();
   res.clearCookie('sid_socket').sendStatus(200);
@@ -115,7 +109,7 @@ userRouter.delete('/delete/:id', async (req, res) => {
         return res.sendStatus(404);
       }
       req.session.destroy();
-      res.clearCookie('sid_socket').sendStatus(200);
+      return res.clearCookie('sid_socket').sendStatus(200);
     } catch (e) {
       console.log(e);
       return res.sendStatus(500);

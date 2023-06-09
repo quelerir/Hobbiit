@@ -76,10 +76,13 @@ export const editUserThunk =
   };
 
 export const deleteUserThunk =
-  (id: UserType['id']): AppThunk =>
+  (id: UserType['id'], navigate: NavigateFunction): AppThunk =>
   (dispatch) => {
     axios
       .delete(`/api/user/delete/${id}`)
-      .then(() => dispatch(deleteUser(id)))
+      .then(() => {
+        dispatch(deleteUser(id));
+        navigate('/');
+      })
       .catch(() => dispatch(deleteUser(id)));
   };

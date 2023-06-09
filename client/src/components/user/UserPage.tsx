@@ -24,13 +24,14 @@ import { getUserName } from '../utils/getUserName';
 import BadgeAvatar from '../ui/BadgeAvatar';
 import emojis from '../utils/emojis';
 import { UPDATE_STATUS } from '../../types/wsTypes';
+import DeleteUserModal from './DeleteUserModal';
 
 type Props = {
   darkMode: boolean;
   toggleDarkMode: () => void;
 };
 
-export default function UserPage({ darkMode, toggleDarkMode, user }: Props): JSX.Element {
+export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Element {
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
   const [isEdit, setIsEdit] = useState(true);
 
@@ -43,9 +44,9 @@ export default function UserPage({ darkMode, toggleDarkMode, user }: Props): JSX
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getFriendsThunk(user.id));
+    dispatch(getFriendsThunk(userSelector?.id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user.id]);
+  }, [userSelector?.id]);
 
   return (
     <div>
@@ -59,7 +60,7 @@ export default function UserPage({ darkMode, toggleDarkMode, user }: Props): JSX
                   <Avatar
                     onClick={(e: React.MouseEvent<HTMLDivElement>) => setAnchorEl(e.currentTarget)}
                     alt="Remy Sharp"
-                    src={`${user.avatar}`}
+                    src={`${userSelector?.avatar}`}
                     sx={{ width: 56, height: 56 }}
                   />
                   <Popover
@@ -91,22 +92,21 @@ export default function UserPage({ darkMode, toggleDarkMode, user }: Props): JSX
                     color="text.primary"
                     gutterBottom
                   >
-                    {`${user.firstname} ${user.lastname}`}
+                    {`${userSelector.firstname} ${userSelector.lastname}`}
                   </Typography>
                   <Typography variant="h5" component="div"></Typography>
                   <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    {user.location}
+                    {userSelector.location}
                   </Typography>
-                  <Typography variant="body2">{user.about}</Typography>
+                  <Typography variant="body2">{userSelector.about}</Typography>
                   <CardActions>
-                    <Button size="small" onClick={() => setIsEdit(false)}>
-                      Edit profile
-                    </Button>
+                    <Button onClick={() => setIsEdit(false)}>Edit profile</Button>
+                    <DeleteUserModal />
                   </CardActions>
                 </CardContent>
               </Card>
             ) : (
-              <EditUserForm setIsEdit={setIsEdit} user={user} />
+              <EditUserForm setIsEdit={setIsEdit} user={userSelector} />
             )}
           </Grid>
           <Grid item xs={4}>
