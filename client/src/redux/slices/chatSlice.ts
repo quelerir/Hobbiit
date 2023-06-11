@@ -13,7 +13,7 @@ export const messageSlice = createSlice({
   initialState,
   reducers: {
     setMessage: (state, action: PayloadAction<MassageType[]>) => action.payload,
-    addMessage: (state, action: PayloadAction<MassageType[]>) => [action.payload, ...state],
+    addMessage: (state, action: PayloadAction<MassageType>) => [action.payload, ...state],
   },
 });
 
