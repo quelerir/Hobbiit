@@ -5,3 +5,9 @@ export type TreadType = {
     treadimg?: string
     user_id?: number
 }
+
+export type TreadFormType = {
+    treadtitle?: string
+    treadbody?: string
+    treadimg?: string
+}

@@ -18,4 +18,9 @@ export type WsUpdateStatusType = {
   type: typeof UPDATE_STATUS;
 };
 
-export type WsActionTypes = WsInitType | WsConnectType | WsUpdateStatusType | WsCloseType;
+export const SEND_MESSAGE = 'SEND_MESSAGE';
+export type WsSendMessageType = {
+  type: typeof SEND_MESSAGE;
+};
+
+export type WsActionTypes = WsInitType | WsConnectType | WsUpdateStatusType | WsCloseType | WsSendMessageType;
