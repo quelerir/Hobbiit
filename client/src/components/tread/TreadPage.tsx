@@ -19,7 +19,7 @@ import { getTreadThunk } from '../../redux/slices/treadsSlice';
 import { getFriendsThunk } from '../../redux/slices/friendsSlice';
 import FriendsList from '../ui/FriendsList';
 import PostCard from './PostCard';
-import AddNewPost from './AddNewPost';
+import AddNewPost from './AddNewCard';
 
 type Props = {
   darkMode: boolean;
