@@ -37,6 +37,8 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
     dispatch(getUserThunk(Number(id)));
   }, [id]);
 
+  // const currentUser = useAppSelector((store) => store.user);
+
   const handleClick = (status: string): void => {
     dispatch({ type: UPDATE_STATUS, payload: { status } });
   };
@@ -104,12 +106,14 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
                   </Typography>
                   <Typography variant="body2">{userSelector.about}</Typography>
                   {
+                  // currentUser.id === userSelector.id && 
+                  (
                     //как мне тут сделать проверку что если юзер из сессии(тоесть я у себя на странице) то добавить кнопки удалить и редактировать, а если я у другого юзера на странице, то добавить кнопку "Добавить в друзья"
                     <CardActions>
                       <Button onClick={() => setIsEdit(false)}>Edit profile</Button>
                       <DeleteUserModal />
                     </CardActions>
-                  }
+                  )}
                 </CardContent>
               </Card>
             ) : (
