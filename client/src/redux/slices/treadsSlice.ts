@@ -7,25 +7,27 @@ import type { AppThunk } from '../hooks';
 const initialState: TreadType = {};
 
 export const treadSlice = createSlice({
-   name: 'tread',
-   initialState,
-   reducers: {
+  name: 'tread',
+  initialState,
+  reducers: {
     setTread: (state, action: PayloadAction<TreadType>) => action.payload,
     addTread: (state, action: PayloadAction<TreadType>) => action.payload,
     editTread: (state, action: PayloadAction<TreadType>) => action.payload,
-    deleteTread: (state, action: PayloadAction<String>) => {},
-   }
+    deleteTread: (state, action: PayloadAction<TreadType['id']>) => {},
+  },
 });
 
 export const { setTread, addTread, editTread, deleteTread } = treadSlice.actions;
 
 export default treadSlice.reducer;
 
-export const getTreadThunk = (id: string): AppThunk => (dispatch) => {
+export const getTreadThunk =
+  (id: TreadType['id']): AppThunk =>
+  (dispatch) => {
     axios<TreadType>(`/api/tread/${id}`)
-    .then(({data}) => dispatch(setTread(data)))
-    .catch(console.log)
-};
+      .then(({ data }) => dispatch(setTread(data)))
+      .catch(console.log);
+  };
 
 export const addTreadThunk =
   (inputs: TreadFormType): AppThunk =>
@@ -36,13 +38,11 @@ export const addTreadThunk =
       .catch(console.log);
   };
 
-export const editTreadThunk = 
-(inputs: TreadFormType, id: string): AppThunk =>
-(dispatch) => {
-    axios
-    .patch<TreadType>(`/api/tread/${id}`)
-    .then(() => dispatch(editTread(id)))
-}
+export const editTreadThunk =
+  (inputs: TreadFormType, id: TreadType['id']): AppThunk =>
+  (dispatch) => {
+    axios.patch<TreadType>(`/api/tread/${id}`).then(() => dispatch(editTread(id)));
+  };
 
 export const deleteTreadThunk =
   (id: string): AppThunk =>

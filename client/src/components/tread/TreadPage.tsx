@@ -29,8 +29,9 @@ type Props = {
 export default function TreadPage({ darkMode, toggleDarkMode }: Props): JSX.Element {
   const { id } = useParams();
   const dispatch = useAppDispatch();
+
   useEffect(() => {
-    dispatch(getTreadThunk(id));
+    dispatch(getTreadThunk(Number(id)));
   }, []);
   const tread = useAppSelector((store) => store.tread);
 
@@ -73,14 +74,14 @@ export default function TreadPage({ darkMode, toggleDarkMode }: Props): JSX.Elem
                 </AvatarGroup>
               </CardActions>
             </Card>
-            <>
+            {/* <>
               <AddNewPost />
               <Grid container spacing={2} sx={{ mt: 2 }}>
                 {posts?.map((post) => (
                   <PostCard key={post.id} post={post} />
                 ))}
               </Grid>
-            </>
+            </> */}
           </Grid>
           <Grid item xs={4}>
             <FriendsList />

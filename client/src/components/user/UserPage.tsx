@@ -18,6 +18,9 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { getFriendsThunk } from '../../redux/slices/friendsSlice';
 import DeleteUserModal from './DeleteUserModal';
 import FriendsList from '../ui/FriendsList';
+import emojis from '../utils/emojis';
+import { getUserThunk } from '../../redux/slices/userSlice';
+import { useParams } from 'react-router-dom';
 
 type Props = {
   darkMode: boolean;
@@ -28,12 +31,20 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
   const [isEdit, setIsEdit] = useState(true);
 
+  const params = useParams();
+  const id = params.id;
+  useEffect(() => {
+    dispatch(getUserThunk(Number(id)));
+  }, [id]);
+
   const handleClick = (status: string): void => {
     dispatch({ type: UPDATE_STATUS, payload: { status } });
   };
 
   const userSelector = useAppSelector((store) => store.user);
+
   const { friendsList = [], friendsOnline = [] } = useAppSelector((store) => store.friends);
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -92,10 +103,13 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
                     {userSelector.location}
                   </Typography>
                   <Typography variant="body2">{userSelector.about}</Typography>
-                  <CardActions>
-                    <Button onClick={() => setIsEdit(false)}>Edit profile</Button>
-                    <DeleteUserModal />
-                  </CardActions>
+                  {
+                    //как мне тут сделать проверку что если юзер из сессии(тоесть я у себя на странице) то добавить кнопки удалить и редактировать, а если я у другого юзера на странице, то добавить кнопку "Добавить в друзья"
+                    <CardActions>
+                      <Button onClick={() => setIsEdit(false)}>Edit profile</Button>
+                      <DeleteUserModal />
+                    </CardActions>
+                  }
                 </CardContent>
               </Card>
             ) : (
