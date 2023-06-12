@@ -39,16 +39,17 @@ wss.on('connection', (ws, request, wsMap) => {
       }
       case 'SEND_MESSAGE': {
         const { recipientId, message } = payload;
-        console.log(payload);
-        console.log('recipientId', recipientId);
         const sender = await User.findByPk(id);
         const recipient = await User.findByPk(recipientId);
+        if (!message) {
+          return;
+        }
 
         if (sender && recipient) {
           const newMessage = await Messages.create({
             subjectchatuser_id: sender.id,
             objectchatuser_id: recipient.id,
-            message: JSON.stringify(message),
+            message,
           });
 
           // Отправить новое сообщение отправителю

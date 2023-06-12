@@ -35,7 +35,7 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
   };
 
   const userSelector = useAppSelector((store) => store.user);
-  const { friendsList = [], friendsOnline = [] } = useAppSelector((store) => store.friends);
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
