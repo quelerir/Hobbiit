@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Navbar from '../ui/Navbar';
-import { 
-  Container, 
-  AvatarGroup, 
-  Avatar, 
-  Grid, 
-  Card, 
-  CardActionArea, 
-  CardMedia, 
-  CardContent, 
-  Typography, 
-  CardActions, 
+import {
+  Container,
+  AvatarGroup,
+  Avatar,
+  Grid,
+  Card,
+  CardActionArea,
+  CardMedia,
+  CardContent,
+  Typography,
+  CardActions,
   Button,
- } from '@mui/material';
+} from '@mui/material';
 import { useAppSelector, useAppDispatch } from '../../redux/hooks';
 import { getTreadThunk } from '../../redux/slices/treadsSlice';
 import { getFriendsThunk } from '../../redux/slices/friendsSlice';
@@ -22,20 +22,23 @@ import FriendsList from '../ui/FriendsList';
 import TreadList from '../ui/TreadList';
 import { Link } from 'react-router-dom';
 
-
 type Props = {
   darkMode: boolean;
   toggleDarkMode: () => void;
 };
 
-export default function TreadPage({ darkMode, toggleDarkMode  }: Props): JSX.Element {
-  
+
+export default function TreadPage({ darkMode, toggleDarkMode }: Props): JSX.Element {
   const { id } = useParams();
   const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(getTreadThunk(id));
+  }, []);
 
   const tread = useAppSelector((store) => store.tread);
   const subscribers = useAppSelector((store) => store.subscribers)
   const userSelector = useAppSelector((store) => store.user);
+
   const [isSubscribed, setIsSubscribed] = useState(false);
 
   useEffect(() => {dispatch(getTreadThunk(Number(id)))}, []);
@@ -46,10 +49,10 @@ export default function TreadPage({ darkMode, toggleDarkMode  }: Props): JSX.Ele
   }, [subscribers, userSelector.id]);
  
   useEffect(() => {
-    dispatch(getFriendsThunk(userSelector.id));
-  }, [userSelector.id]);
 
-  
+    dispatch(getFriendsThunk(userSelector?.id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userSelector?.id]);
 
   const subscribeHandler = () => {dispatch(addSubscriberThunk(id))};
   const unfollowHandler = () => {dispatch(deleteSubscriberThunk(id))}
@@ -103,7 +106,7 @@ export default function TreadPage({ darkMode, toggleDarkMode  }: Props): JSX.Ele
           <FriendsList />
           <TreadList />
           </Grid>
-       </Grid>
+        </Grid>
       </Container>
     </div>
   );
