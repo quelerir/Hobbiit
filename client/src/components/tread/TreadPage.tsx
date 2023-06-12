@@ -23,6 +23,9 @@ import {
   deleteSubscriberThunk,
 } from '../../redux/slices/subscribersSlice';
 import FriendsList from '../ui/FriendsList';
+import TreadList from '../ui/TreadList';
+import { Link } from 'react-router-dom';
+import AddNewCard from './AddNewCard';
 
 type Props = {
   darkMode: boolean;
@@ -35,6 +38,7 @@ export default function TreadPage({ darkMode, toggleDarkMode }: Props): JSX.Elem
   useEffect(() => {
     dispatch(getTreadThunk(id));
   }, []);
+
   const tread = useAppSelector((store) => store.tread);
   const subscribers = useAppSelector((store) => store.subscribers);
   const userSelector = useAppSelector((store) => store.user);
@@ -83,21 +87,36 @@ export default function TreadPage({ darkMode, toggleDarkMode }: Props): JSX.Elem
                 </CardContent>
               </CardActionArea>
               <CardActions>
-                <Button size="small" color="primary">
-                  Subscribe
-                </Button>
+                {!isSubscribed && (
+                  <Button size="small" color="primary" onClick={subscribeHandler}>
+                    Subscribe
+                  </Button>
+                )}
+                {isSubscribed && (
+                  <Button size="small" color="secondary" onClick={unfollowHandler}>
+                    Unfollow
+                  </Button>
+                )}
                 <AvatarGroup max={4}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-                  <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-                  <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
-                  <Avatar alt="Agnes Walker" src="/static/images/avatar/4.jpg" />
-                  <Avatar alt="Trevor Henderson" src="/static/images/avatar/5.jpg" />
+                  {subscribers.map((user) => {
+                    return (
+                      <Link to={`/user/${user.id}`}>
+                        <Avatar
+                          key={user.id}
+                          alt="https://t3.ftcdn.net/jpg/02/09/37/00/360_F_209370065_JLXhrc5inEmGl52SyvSPeVB23hB6IjrR.jpg"
+                          src={`${user.avatar}`}
+                        />
+                      </Link>
+                    );
+                  })}
                 </AvatarGroup>
               </CardActions>
             </Card>
+            <AddNewCard />
           </Grid>
           <Grid item xs={4}>
             <FriendsList />
+            <TreadList />
           </Grid>
         </Grid>
       </Container>

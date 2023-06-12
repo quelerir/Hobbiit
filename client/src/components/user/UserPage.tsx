@@ -20,6 +20,8 @@ import DeleteUserModal from './DeleteUserModal';
 import FriendsList from '../ui/FriendsList';
 import TreadList from '../ui/TreadList';
 import emojis from '../utils/emojis';
+import { useParams } from 'react-router-dom';
+import { setCurrentUserThunk } from '../../redux/slices/currentUserSlice';
 
 type Props = {
   darkMode: boolean;
