@@ -34,11 +34,9 @@ function FriendsList() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getFriendsThunk(userSelector.id));
+    dispatch(getFriendsThunk(userSelector?.id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userSelector.id]);
-
-  console.log(friendsList);
+  }, [userSelector?.id]);
 
   return (
     <Card sx={{ minWidth: 375, maxWidth: 375, height: '85vh' }}>
@@ -48,30 +46,30 @@ function FriendsList() {
         </Typography>
         <Grid item xs={3}>
           <List>
-            {friendsList.map((friend) => {
+            {friendsList?.map((friend) => {
               const emojiKey = friend?.status || 'happy';
               const friendName = getUserName(friend.email);
               const isOnline = friendsOnline.map((el) => el.id).includes(friend.id);
-              const isDialogOpen = openDialogId === friend.id;
-
+              const isDialogOpen = openDialogId === friend?.id;
               return (
-                    <ListItem key={friend.id}>
+                <ListItem key={friend?.id}>
                   <Link to={`/user/${friend.id}`}>
-                <ListItemAvatar onClick={() => handleOpenDialog(friend.id)}>
-                  <BadgeAvatar
-                    alt={`${friendName}`}
-                    src={`${friend.avatar}`}
-                    isOnline={isOnline}
-                  />
-                </ListItemAvatar>
-                  <ListItemText
-                    primary={`${friend?.firstname + ' ' + friend?.lastname || ''} ${
-                      emojis[emojiKey]
-                    }`}
-                  />
-                  <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
-                    <ModalChat key={friend.id} friend={friend} />
-                  </Dialog>
+                    <ListItemAvatar onClick={() => handleOpenDialog(friend.id)}>
+                      <BadgeAvatar
+                        alt={`${friendName}`}
+                        src={`${friend.avatar}`}
+                        isOnline={isOnline}
+                      />
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={`${friend?.firstname + ' ' + friend?.lastname || ''} ${
+                        emojis[emojiKey]
+                      }`}
+                    />
+                    <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
+                      <ModalChat key={friend?.id} friend={friend} />
+                    </Dialog>
+                  </Link>
                 </ListItem>
               );
             })}
