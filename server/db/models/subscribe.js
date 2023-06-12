@@ -4,14 +4,10 @@ const {
 
 module.exports = (sequelize, DataTypes) => {
   class Subscribe extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+   
     static associate({ User, Tread }) {
-      this.belongsTo(User, { foreignKey: 'user_id' });
-      this.belongsTo(Tread, { foreignKey: 'tread_id' });
+      this.belongsTo(User, { foreignKey: 'user_id', as: 'userTreads' });
+      this.belongsTo(Tread, { foreignKey: 'tread_id', as: 'subscribers' });
     }
   }
   Subscribe.init({

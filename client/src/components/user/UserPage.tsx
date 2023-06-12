@@ -18,7 +18,11 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { getFriendsThunk } from '../../redux/slices/friendsSlice';
 import DeleteUserModal from './DeleteUserModal';
 import FriendsList from '../ui/FriendsList';
+import TreadList from '../ui/TreadList';
 import emojis from '../utils/emojis';
+import { useParams } from 'react-router-dom';
+import { UPDATE_STATUS } from '../../types/wsTypes';
+import { setCurrentUserThunk } from '../../redux/slices/currentUserSlice';
 
 
 type Props = {
@@ -30,18 +34,24 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
   const [isEdit, setIsEdit] = useState(true);
 
+  const { id }= useParams();
+
   const handleClick = (status: string): void => {
     dispatch({ type: UPDATE_STATUS, payload: { status } });
   };
 
   const userSelector = useAppSelector((store) => store.user);
-  const { friendsList = [], friendsOnline = [] } = useAppSelector((store) => store.friends);
+  const currentUser = useAppSelector((store) => store.currentUser);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+  dispatch(setCurrentUserThunk(id));
+}, [id]);
+  useEffect(() => {
     dispatch(getFriendsThunk(userSelector?.id));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userSelector?.id]);
+
+  console.log(currentUser);
 
   return (
     <div>
@@ -55,7 +65,7 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
                   <Avatar
                     onClick={(e: React.MouseEvent<HTMLDivElement>) => setAnchorEl(e.currentTarget)}
                     alt="Remy Sharp"
-                    src={`${userSelector?.avatar}`}
+                    src={`${currentUser?.avatar}`}
                     sx={{ width: 56, height: 56 }}
                   />
                   <Popover
@@ -87,25 +97,26 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
                     color="text.primary"
                     gutterBottom
                   >
-                    {`${userSelector.firstname} ${userSelector.lastname}`}
+                    {`${currentUser.firstname} ${currentUser.lastname}`}
                   </Typography>
                   <Typography variant="h5" component="div"></Typography>
                   <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    {userSelector.location}
+                    {currentUser.location}
                   </Typography>
-                  <Typography variant="body2">{userSelector.about}</Typography>
+                  <Typography variant="body2">{currentUser.about}</Typography>
                   <CardActions>
                     <Button onClick={() => setIsEdit(false)}>Edit profile</Button>
                     <DeleteUserModal />
                   </CardActions>
                 </CardContent>
               </Card>
-            ) : (
+            ) : ( (currentUser.id === userSelector.id) &&
               <EditUserForm setIsEdit={setIsEdit} user={userSelector} />
             )}
           </Grid>
           <Grid item xs={4}>
             <FriendsList />
+            <TreadList />
           </Grid>
         </Grid>
       </Container>
