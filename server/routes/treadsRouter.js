@@ -1,5 +1,5 @@
 const express = require('express');
-const { Tread } = require('../db/models');
+const { Tread, User } = require('../db/models');
 
 const treadsRouter = express.Router();
 
@@ -11,6 +11,22 @@ treadsRouter.get('/:id', async (req, res) => {
     });
     return res.json(tread);
   } catch {
+    return res.sendStatus(500);
+  }
+});
+
+treadsRouter.get('/:id/subscribers', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const tread = await Tread.findOne({
+      where: { id },
+      include:{model: User,
+        through: 'Subscribes',
+        as: 'subscribers'}
+    });
+    return res.json(tread.subscribers);
+  } catch (error) {
+    console.error(error);
     return res.sendStatus(500);
   }
 });
