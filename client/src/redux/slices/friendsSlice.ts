@@ -17,6 +17,15 @@ export const userSlice = createSlice({
     setFriends: (state, action: PayloadAction<UserType[]>) => {
       state.friendsList = action.payload;
     },
+    addFriend: (state, action: PayloadAction<UserType>) => {
+      state.friendsList = [action.payload, ...state.friendsList];
+    },
+    deleteFriend:  (state, action: PayloadAction<string>) => {
+      // state.friendsList.map((el) => {el.id !== Number(action.payload)});
+     state.friendsList.filter((el) => {el.id !== +(action.payload)});
+
+    },
+
     setFriendsOnline: (state, action: PayloadAction<UserType[]>) => {
       const friends = JSON.parse(JSON.stringify(state.friendsList)) as FriendsState['friendsList'];
       // eslint-disable-next-line no-restricted-syntax
@@ -30,7 +39,7 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setFriends, setFriendsOnline } = userSlice.actions;
+export const { setFriends, setFriendsOnline, addFriend, deleteFriend } = userSlice.actions;
 
 export const getFriendsThunk =
   (userId: UserType['id']): AppThunk =>
@@ -41,5 +50,23 @@ export const getFriendsThunk =
         .catch(console.log);
     }
   };
+
+  export const addFriendThunk =
+  (userId: UserType['id']): AppThunk =>
+  (dispatch) => {
+    axios
+        .post<UserType>(`/api/friends/${userId}`)
+        .then(({ data }) => dispatch(addFriend(data)))
+        .catch(console.log);
+    };
+
+    export const deleteFriendThunk =
+  (userId: UserType['id']): AppThunk =>
+  (dispatch) => {
+    axios
+        .delete(`/api/friends/${userId}`)
+        .then(({data}) => dispatch(deleteFriend(data)))
+        .catch(console.log);
+    };
 
 export default userSlice.reducer;
