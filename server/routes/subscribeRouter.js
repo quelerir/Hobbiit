@@ -7,7 +7,7 @@ subscriberRouter.post('/:treadId', async (req, res) => {
     try {
     const { treadId } = req.params;
     const userId = req.session.user.id;
-    const findSubscribe = await Subscribe.findOne({user_id: userId, tread_id: treadId});
+    const findSubscribe = await Subscribe.findOne({where: {user_id: userId, tread_id: treadId}});
     if(findSubscribe){
       return res.status(409).json({ message: "Subscribe already exists" });
     }

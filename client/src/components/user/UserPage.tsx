@@ -23,6 +23,7 @@ import emojis from '../utils/emojis';
 import { useParams } from 'react-router-dom';
 import { UPDATE_STATUS } from '../../types/wsTypes';
 import { setCurrentUserThunk } from '../../redux/slices/currentUserSlice';
+import { addFriendThunk, deleteFriendThunk } from '../../redux/slices/friendsSlice';
 
 
 type Props = {
@@ -40,16 +41,39 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
     dispatch({ type: UPDATE_STATUS, payload: { status } });
   };
 
+  
+
   const userSelector = useAppSelector((store) => store.user);
   const currentUser = useAppSelector((store) => store.currentUser);
+  const { friendsList = [] } = useAppSelector((store) => store.friends);
+
   const dispatch = useAppDispatch();
+  
+  const addFriendHandler = () => {dispatch(addFriendThunk(currentUser.id))}
+  const deleteFriendHandler = () => {
+    setListUpdated(true)
+    dispatch(deleteFriendThunk(currentUser.id))
+    
+  }
+
+  const [isFriend, setisFriend] = useState(false);
 
   useEffect(() => {
   dispatch(setCurrentUserThunk(id));
-}, [id]);
+  }, [id]);
+  const [listUpdated, setListUpdated] = useState<boolean>(false)
   useEffect(() => {
-    dispatch(getFriendsThunk(userSelector?.id));
-  }, [userSelector?.id]);
+    if(listUpdated) {
+      dispatch(getFriendsThunk(userSelector?.id));
+
+    }
+    setListUpdated(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listUpdated]);
+  useEffect(() => { 
+    const friended = friendsList.filter((user) => user.id === currentUser.id);
+    setisFriend(friended.length > 0);
+  }, [friendsList, currentUser.id]);
 
 
   return (
@@ -98,6 +122,16 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
                   >
                     {`${currentUser?.firstname} ${currentUser?.lastname}`}
                   </Typography>
+
+                 {(currentUser?.id !== userSelector?.id) && ((!isFriend && (
+      <Button size="small" color="primary" onClick={addFriendHandler}>
+          Add to Friends
+        </Button>)) ||
+        (isFriend && (
+        <Button size="small" color="secondary" onClick={deleteFriendHandler}>
+          Delete from Friends
+        </Button>)))}
+
                   <Typography variant="h5" component="div"></Typography>
                   <Typography sx={{ mb: 1.5 }} color="text.secondary">
                     {currentUser?.location}
@@ -109,7 +143,7 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
                   </CardActions>
                 </CardContent>
               </Card>
-            ) : ( (currentUser?.id === userSelector?.id) &&
+            ) : (
               <EditUserForm setIsEdit={setIsEdit} user={userSelector} />
             )}
           </Grid>
