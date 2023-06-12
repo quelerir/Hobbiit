@@ -8,6 +8,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  Button,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
@@ -17,6 +18,7 @@ import BadgeAvatar from '../ui/BadgeAvatar';
 import emojis from '../utils/emojis';
 import ModalChat from './ModalChat';
 import Dialog from '@mui/material/Dialog';
+import ChatIcon from '@mui/icons-material/Chat';
 
 function FriendsList() {
   const [openDialogId, setOpenDialogId] = useState(null);
@@ -44,7 +46,7 @@ function FriendsList() {
         <Typography sx={{ fontSize: 18, fontWeight: 'bold', textTransform: 'uppercase' }}>
           Friends
         </Typography>
-        <Grid item xs={3}>
+        <Grid item xs={12}>
           <List>
             {friendsList?.map((friend) => {
               const emojiKey = friend?.status || 'happy';
@@ -54,22 +56,27 @@ function FriendsList() {
               return (
                 <ListItem key={friend?.id}>
                   <Link to={`/user/${friend.id}`}>
-                    <ListItemAvatar onClick={() => handleOpenDialog(friend.id)}>
+                    <ListItemAvatar>
                       <BadgeAvatar
                         alt={`${friendName}`}
                         src={`${friend.avatar}`}
                         isOnline={isOnline}
                       />
                     </ListItemAvatar>
-                    <ListItemText
-                      primary={`${friend?.firstname + ' ' + friend?.lastname || ''} ${
-                        emojis[emojiKey]
-                      }`}
-                    />
-                    <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
-                      <ModalChat key={friend?.id} friend={friend} />
-                    </Dialog>
                   </Link>
+                  <ListItemText
+                    primary={`${friend?.firstname + ' ' + friend?.lastname || ''} ${
+                      emojis[emojiKey]
+                    }`}
+                  />
+                  <Button
+                    endIcon={<ChatIcon />}
+                    onClick={() => handleOpenDialog(friend.id)}
+                    style={{ height: '44px' }}
+                  ></Button>
+                  <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
+                    <ModalChat key={friend.id} friend={friend} />
+                  </Dialog>
                 </ListItem>
               );
             })}
