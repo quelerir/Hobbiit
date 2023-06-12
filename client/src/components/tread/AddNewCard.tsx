@@ -26,7 +26,7 @@ export default function AddNewCard() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    dispatch(addPostThunk(input, id));
+    dispatch(addPostThunk(input, Number(id)));
     setInput({ posttitle: '', postbody: '', postimg: '' });
   };
   return (
@@ -34,7 +34,7 @@ export default function AddNewCard() {
       component="form"
       onSubmit={(e) => handleSubmit(e)}
       sx={{
-        '& .MuiTextField-root': { mt: 1, width: '100%' },
+        '& .MuiTextField-root': { mt: 2, width: '100%' },
       }}
       noValidate
       autoComplete="off"

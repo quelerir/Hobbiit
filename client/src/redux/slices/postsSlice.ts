@@ -16,7 +16,7 @@ export const postsSlice = createSlice({
     addPost: (state, action: PayloadAction<PostType>) => [action.payload, ...state],
     editPost: (state, action: PayloadAction<PostType>) =>
       state.map((el) => (el.id !== action.payload.id ? el : action.payload)),
-    deletePost: (state, action: PayloadAction<string>) =>
+    deletePost: (state, action: PayloadAction<PostType['id']>) =>
       state.filter((el) => el.id !== Number(action.payload)),
   },
 });
@@ -26,7 +26,7 @@ export const { setPosts, addPost, deletePost, editPost } = postsSlice.actions;
 export default postsSlice.reducer;
 
 export const getPostsThunk =
-  (treadId: string): AppThunk =>
+  (treadId: PostType['tread_id']): AppThunk =>
   (dispatch) => {
     axios<PostType[]>(`/api/posts/${treadId}`)
       .then(({ data }) => dispatch(setPosts(data)))
@@ -34,22 +34,22 @@ export const getPostsThunk =
   };
 
 export const addPostThunk =
-  (inputs: PostFormType, treadId: string): AppThunk =>
+  (input: PostFormType, treadId: PostType['tread_id']): AppThunk =>
   (dispatch) => {
     axios
-      .post<PostType>(`/api/posts/${treadId}`, inputs)
+      .post<PostType>(`/api/posts/${treadId}`, input)
       .then(({ data }) => dispatch(addPost(data)))
       .catch(console.log);
   };
 
 export const editPostThunk =
-  (inputs: PostFormType, id: string): AppThunk =>
+  (input: PostFormType, id: PostType['id']): AppThunk =>
   (dispatch) => {
-    axios.patch<PostType>(`/api/posts/${id}`).then(() => dispatch(editPost(id)));
+    axios.patch<PostType>(`/api/posts/${id}`, input).then(({ data }) => dispatch(editPost(data)));
   };
 
 export const deletePostThunk =
-  (id: string): AppThunk =>
+  (id: PostType['id']): AppThunk =>
   (dispatch) => {
     axios
       .delete(`/api/posts/${id}`)

@@ -13,6 +13,8 @@ import {
   Typography,
   CardActions,
   Button,
+  List,
+  ListItem,
 } from '@mui/material';
 import { useAppSelector, useAppDispatch } from '../../redux/hooks';
 import { getTreadThunk } from '../../redux/slices/treadsSlice';
@@ -26,6 +28,8 @@ import FriendsList from '../ui/FriendsList';
 import TreadList from '../ui/TreadList';
 import { Link } from 'react-router-dom';
 import AddNewCard from './AddNewCard';
+import PostCard from './PostCard';
+import { getPostsThunk } from '../../redux/slices/postsSlice';
 
 type Props = {
   darkMode: boolean;
@@ -35,10 +39,8 @@ type Props = {
 export default function TreadPage({ darkMode, toggleDarkMode }: Props): JSX.Element {
   const { id } = useParams();
   const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(getTreadThunk(id));
-  }, []);
 
+  const posts = useAppSelector((store) => store.post);
   const tread = useAppSelector((store) => store.tread);
   const subscribers = useAppSelector((store) => store.subscribers);
   const userSelector = useAppSelector((store) => store.user);
@@ -46,11 +48,20 @@ export default function TreadPage({ darkMode, toggleDarkMode }: Props): JSX.Elem
   const [isSubscribed, setIsSubscribed] = useState(false);
 
   useEffect(() => {
+    dispatch(getTreadThunk(id));
+  }, []);
+
+  useEffect(() => {
+    dispatch(getPostsThunk(id));
+  }, [id]);
+
+  useEffect(() => {
     dispatch(getTreadThunk(Number(id)));
   }, []);
   useEffect(() => {
     dispatch(getSubscribersThunk(id));
   }, []);
+
   useEffect(() => {
     const subscribed = subscribers.filter((user) => user.id === userSelector.id);
     setIsSubscribed(subscribed.length > 0);
@@ -113,6 +124,13 @@ export default function TreadPage({ darkMode, toggleDarkMode }: Props): JSX.Elem
               </CardActions>
             </Card>
             <AddNewCard />
+            <List>
+              {posts?.map((post) => (
+                <ListItem>
+                  <PostCard post={post} key={post.id} />
+                </ListItem>
+              ))}
+            </List>
           </Grid>
           <Grid item xs={4}>
             <FriendsList />
