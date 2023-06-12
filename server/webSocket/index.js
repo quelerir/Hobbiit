@@ -44,7 +44,7 @@ wss.on('connection', (ws, request, wsMap) => {
         if (!message) {
           return;
         }
-
+        // отправку сообщение
         if (sender && recipient) {
           const newMessage = await Messages.create({
             subjectchatuser_id: sender.id,
