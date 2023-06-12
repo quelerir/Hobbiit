@@ -45,7 +45,7 @@ export default function ModalChat({ friend }) {
               ref={(el) => (UserMassage.length - 1 === index ? (endRef.current = el) : null)}
             >
               <ListItemAvatar>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                <Avatar alt="img" src={userMassage.SubjectChatUser?.avatar} />
               </ListItemAvatar>
               <ListItemText
                 primary={
