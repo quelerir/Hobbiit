@@ -51,7 +51,6 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
     dispatch(getFriendsThunk(userSelector?.id));
   }, [userSelector?.id]);
 
-  console.log(currentUser);
 
   return (
     <div>
@@ -83,7 +82,7 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
                     }}
                   >
                     <Box display="flex" flexDirection="column">
-                      {Object.entries(emojis).map((el) => (
+                      {Object.entries(emojis)?.map((el) => (
                         <Button key={el[0]} onClick={() => handleClick(el[0])}>
                           {el[1]}
                         </Button>
@@ -97,20 +96,20 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
                     color="text.primary"
                     gutterBottom
                   >
-                    {`${currentUser.firstname} ${currentUser.lastname}`}
+                    {`${currentUser?.firstname} ${currentUser?.lastname}`}
                   </Typography>
                   <Typography variant="h5" component="div"></Typography>
                   <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    {currentUser.location}
+                    {currentUser?.location}
                   </Typography>
-                  <Typography variant="body2">{currentUser.about}</Typography>
+                  <Typography variant="body2">{currentUser?.about}</Typography>
                   <CardActions>
                     <Button onClick={() => setIsEdit(false)}>Edit profile</Button>
                     <DeleteUserModal />
                   </CardActions>
                 </CardContent>
               </Card>
-            ) : ( (currentUser.id === userSelector.id) &&
+            ) : ( (currentUser?.id === userSelector?.id) &&
               <EditUserForm setIsEdit={setIsEdit} user={userSelector} />
             )}
           </Grid>
