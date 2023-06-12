@@ -9,6 +9,7 @@ import {
   ListItemAvatar,
   ListItemText,
 } from '@mui/material';
+import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { getFriendsThunk } from '../../redux/slices/friendsSlice';
 import { getUserName } from '../utils/getUserName';
@@ -37,6 +38,8 @@ function FriendsList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userSelector.id]);
 
+  console.log(friendsList);
+
   return (
     <Card sx={{ minWidth: 375, maxWidth: 375, height: '85vh' }}>
       <CardContent>
@@ -52,14 +55,15 @@ function FriendsList() {
               const isDialogOpen = openDialogId === friend.id;
 
               return (
-                <ListItem key={friend.id}>
-                  <ListItemAvatar onClick={() => handleOpenDialog(friend.id)}>
-                    <BadgeAvatar
-                      alt={`${friendName}`}
-                      src={`/images/${friendName}.jpeg`}
-                      isOnline={isOnline}
-                    />
-                  </ListItemAvatar>
+                    <ListItem key={friend.id}>
+                  <Link to={`/user/${friend.id}`}>
+                <ListItemAvatar onClick={() => handleOpenDialog(friend.id)}>
+                  <BadgeAvatar
+                    alt={`${friendName}`}
+                    src={`${friend.avatar}`}
+                    isOnline={isOnline}
+                  />
+                </ListItemAvatar>
                   <ListItemText
                     primary={`${friend?.firstname + ' ' + friend?.lastname || ''} ${
                       emojis[emojiKey]

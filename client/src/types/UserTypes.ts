@@ -30,3 +30,8 @@ export type UserHandlersType = {
   e: React.FormEvent<HTMLFormElement>;
   input: UserSignUpType;
 };
+
+export type UserSubscribedType = {
+  id?: number;
+  avatar?: string;
+};

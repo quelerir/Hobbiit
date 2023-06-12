@@ -3,8 +3,14 @@ import createSagaMiddleware from 'redux-saga';
 import userReducer from './slices/userSlice';
 import rootSaga from './sagas/rootSaga';
 import friendsReducer from './slices/friendsSlice';
+import treadReducer from './slices/treadsSlice';
+import commentsReducer from './slices/commentsSlice';
+import postsReducer from './slices/postsSlice'
 import chatReducer from './slices/chatSlice';
-import treadReducer from './slices/treadsSlice'
+import userTreadsSlice from './slices/userTreadsSlice';
+import subscribersSlice from './slices/subscribersSlice';
+import currentUserSlice from './slices/currentUserSlice';
+
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -14,6 +20,11 @@ export const store = configureStore({
     friends: friendsReducer,
     UserMessage: chatReducer,
     tread: treadReducer,
+    comment: commentsReducer,
+    post: postsReducer,
+    usertreads: userTreadsSlice,
+    subscribers: subscribersSlice,
+    currentUser: currentUserSlice,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(sagaMiddleware),
 });
