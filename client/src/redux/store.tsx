@@ -7,6 +7,9 @@ import treadReducer from './slices/treadsSlice';
 import commentsReducer from './slices/commentsSlice';
 import postsReducer from './slices/postsSlice'
 import chatReducer from './slices/chatSlice';
+import userTreadsSlice from './slices/userTreadsSlice';
+import subscribersSlice from './slices/subscribersSlice';
+import currentUserSlice from './slices/currentUserSlice';
 
 
 const sagaMiddleware = createSagaMiddleware();
@@ -19,6 +22,9 @@ export const store = configureStore({
     tread: treadReducer,
     comment: commentsReducer,
     post: postsReducer,
+    usertreads: userTreadsSlice,
+    subscribers: subscribersSlice,
+    currentUser: currentUserSlice,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(sagaMiddleware),
 });

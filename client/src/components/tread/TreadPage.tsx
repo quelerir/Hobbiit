@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Navbar from '../ui/Navbar';
 import {
@@ -17,9 +17,12 @@ import {
 import { useAppSelector, useAppDispatch } from '../../redux/hooks';
 import { getTreadThunk } from '../../redux/slices/treadsSlice';
 import { getFriendsThunk } from '../../redux/slices/friendsSlice';
+import {
+  getSubscribersThunk,
+  addSubscriberThunk,
+  deleteSubscriberThunk,
+} from '../../redux/slices/subscribersSlice';
 import FriendsList from '../ui/FriendsList';
-import PostCard from './PostCard';
-import AddNewPost from './AddNewCard';
 
 type Props = {
   darkMode: boolean;
@@ -29,19 +32,37 @@ type Props = {
 export default function TreadPage({ darkMode, toggleDarkMode }: Props): JSX.Element {
   const { id } = useParams();
   const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(getTreadThunk(id));
+  }, []);
+  const tread = useAppSelector((store) => store.tread);
+  const subscribers = useAppSelector((store) => store.subscribers);
+  const userSelector = useAppSelector((store) => store.user);
+
+  const [isSubscribed, setIsSubscribed] = useState(false);
 
   useEffect(() => {
     dispatch(getTreadThunk(Number(id)));
   }, []);
-  const tread = useAppSelector((store) => store.tread);
-
-  const userSelector = useAppSelector((store) => store.user);
-  const { friendsList = [], friendsOnline = [] } = useAppSelector((store) => store.friends);
+  useEffect(() => {
+    dispatch(getSubscribersThunk(id));
+  }, []);
+  useEffect(() => {
+    const subscribed = subscribers.filter((user) => user.id === userSelector.id);
+    setIsSubscribed(subscribed.length > 0);
+  }, [subscribers, userSelector.id]);
 
   useEffect(() => {
-    dispatch(getFriendsThunk(userSelector.id));
+    dispatch(getFriendsThunk(userSelector?.id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userSelector.id]);
+  }, [userSelector?.id]);
+
+  const subscribeHandler = () => {
+    dispatch(addSubscriberThunk(id));
+  };
+  const unfollowHandler = () => {
+    dispatch(deleteSubscriberThunk(id));
+  };
 
   return (
     <div>
@@ -74,14 +95,6 @@ export default function TreadPage({ darkMode, toggleDarkMode }: Props): JSX.Elem
                 </AvatarGroup>
               </CardActions>
             </Card>
-            {/* <>
-              <AddNewPost />
-              <Grid container spacing={2} sx={{ mt: 2 }}>
-                {posts?.map((post) => (
-                  <PostCard key={post.id} post={post} />
-                ))}
-              </Grid>
-            </> */}
           </Grid>
           <Grid item xs={4}>
             <FriendsList />

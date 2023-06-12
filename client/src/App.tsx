@@ -9,7 +9,7 @@ import { checkUserThunk } from './redux/slices/userSlice';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { SOCKET_INIT } from './types/wsTypes';
-import Chat from './components/ui/Chat';
+import ProtectedRoute from './hoc/ProtectedRoute';
 
 function App(): JSX.Element {
   const user = useAppSelector((store) => store.user);
@@ -29,7 +29,7 @@ function App(): JSX.Element {
   }, [darkMode]);
 
   useEffect(() => {
-    if (user.id) {
+    if (!user.id) {
       dispatch({ type: SOCKET_INIT });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -60,7 +60,6 @@ function App(): JSX.Element {
             path="/tread/:id"
             element={<TreadPage darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
           />
-          <Route path="/chat" element={<Chat />} />
         </Routes>
       </ThemeProvider>
     </div>

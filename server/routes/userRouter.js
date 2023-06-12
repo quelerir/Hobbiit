@@ -1,6 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
-const { User } = require('../db/models');
+const { User, Tread } = require('../db/models');
 
 const userRouter = express.Router();
 
@@ -132,5 +132,26 @@ userRouter.delete('/delete/:id', async (req, res) => {
   }
   return res.sendStatus(400);
 });
+
+userRouter.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.clearCookie('sid_socket').sendStatus(200);
+});
+
+userRouter.get('/usertreads', async (req,res) => {
+try{
+const {id} = req.session.user;
+const user = await User.findOne({
+  where: { id },
+  include:{model: Tread,
+    through: 'Subscribes',
+    as: 'userTreads'}
+});
+return res.json(user.userTreads)
+} catch {
+  return res.sendStatus(500);
+}
+})
+
 
 module.exports = userRouter;
