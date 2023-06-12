@@ -21,10 +21,8 @@ import FriendsList from '../ui/FriendsList';
 import TreadList from '../ui/TreadList';
 import emojis from '../utils/emojis';
 import { useParams } from 'react-router-dom';
-import { UPDATE_STATUS } from '../../types/wsTypes';
 import { setCurrentUserThunk } from '../../redux/slices/currentUserSlice';
 import { addFriendThunk, deleteFriendThunk } from '../../redux/slices/friendsSlice';
-
 
 type Props = {
   darkMode: boolean;
@@ -35,7 +33,7 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
   const [isEdit, setIsEdit] = useState(true);
 
-  const { id }= useParams();
+  const { id } = useParams();
 
   const handleClick = (status: string): void => {
     dispatch({ type: UPDATE_STATUS, payload: { status } });
@@ -74,7 +72,6 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
     const friended = friendsList.filter((user) => user.id === currentUser.id);
     setisFriend(friended.length > 0);
   }, [friendsList, currentUser.id]);
-
 
   return (
     <div>

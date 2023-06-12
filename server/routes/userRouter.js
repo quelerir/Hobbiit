@@ -60,6 +60,21 @@ userRouter.get('/check', (req, res) => {
   return res.sendStatus(401);
 });
 
+userRouter.get('/:id', (req, res) => {
+  const { id } = req.params;
+  User.findByPk(id)
+    .then((user) => {
+      if (user) {
+        return res.json(user);
+      }
+      return res.sendStatus(404);
+    })
+    .catch((e) => {
+      console.log(e);
+      return res.sendStatus(500);
+    });
+});
+
 userRouter.get('/logout', (req, res) => {
   req.session.destroy();
   res.clearCookie('sid_socket').sendStatus(200);

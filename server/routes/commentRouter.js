@@ -1,5 +1,5 @@
 const express = require('express');
-const { Comment } = require('../db/models');
+const { Comment, User } = require('../db/models');
 
 const commentsRouter = express.Router();
 
@@ -9,6 +9,7 @@ commentsRouter.get('/:postId', async (req, res) => {
     const postComments = await Comment.findAll({
       where: { post_id: postId },
     });
+    console.log(postComments, '++++++++++');
     return res.json(postComments);
   } catch {
     return res.sendStatus(500);
@@ -16,28 +17,29 @@ commentsRouter.get('/:postId', async (req, res) => {
 });
 
 commentsRouter.post('/:postId', async (req, res) => {
-    try {
-        const { postId } = req.params;
-        const { commentbody } = req.body;
-        const userId = req.session.user.id
-        const newComment = await Comment.create({post_id: postId, user_id: userId, commentbody});
-        return res.json(newComment);
-    } catch {
-        return res.sendStatus(500);
-    }
+  try {
+    const { postId } = req.params;
+    const { commentbody } = req.body;
+    console.log(commentbody, '===============');
+    const userId = req.session.user.id;
+    const newComment = await Comment.create({ post_id: postId, user_id: userId, commentbody });
+    return res.json(newComment);
+  } catch {
+    return res.sendStatus(500);
+  }
 });
 
 commentsRouter.patch('/:id', async (req, res) => {
-    try {
+  try {
     const { id } = req.params;
     const { commentbody } = req.body;
     await Comment.update({ commentbody }, { where: { id } });
     const comment = await Comment.findByPk(id);
     return res.json(comment);
-} catch {
+  } catch {
     return res.sendStatus(500);
-}
-  });
+  }
+});
 
 commentsRouter.delete('/:id', async (req, res) => {
   try {
