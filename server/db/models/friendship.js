@@ -1,13 +1,13 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class FriendShip extends Model {
+  class Friendship extends Model {
     static associate(models) {
-      FriendShip.belongsTo(models.User, { foreignKey: 'subjectuser_id', as: 'SubjectUser' });
-      FriendShip.belongsTo(models.User, { foreignKey: 'objectuser_id', as: 'ObjectUser' });
+      Friendship.belongsTo(models.User, { foreignKey: 'subjectuser_id', as: 'SubjectUser' });
+      Friendship.belongsTo(models.User, { foreignKey: 'objectuser_id', as: 'ObjectUser' });
     }
   }
-  FriendShip.init(
+  Friendship.init(
     {
       subjectuser_id: DataTypes.INTEGER,
       objectuser_id: DataTypes.INTEGER,
@@ -17,5 +17,5 @@ module.exports = (sequelize, DataTypes) => {
       modelName: 'Friendship',
     },
   );
-  return FriendShip;
+  return Friendship;
 };
