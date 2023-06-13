@@ -1,6 +1,19 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
+const multer = require('multer');
+const path = require('path');
 const { User, Tread } = require('../db/models');
+
+const storage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, '../client/public/photo'); // Измените путь к папке, где вы хотите сохранить фото
+  },
+  filename(req, file, cb) {
+    cb(null, file.originalname); // Сохраняйте файл с его исходным именем
+  },
+});
+
+const upload = multer({ storage });
 
 const userRouter = express.Router();
 
@@ -83,6 +96,7 @@ userRouter.get('/logout', (req, res) => {
 userRouter.patch('/:id/edit', async (req, res) => {
   const { firstname, lastname, location, about } = req.body;
   const { id } = req.params;
+  const { user } = req.session;
 
   try {
     const updatedUser = await User.update(
@@ -99,15 +113,11 @@ userRouter.patch('/:id/edit', async (req, res) => {
     }
     const editedUser = await User.findOne({ where: { id } });
 
-    // req.session.user = user;
-    // req.session.save();
-    // console.log(user);
-
-    const { user } = req.session;
     user.firstname = firstname;
     user.lastname = lastname;
     user.location = location;
     user.about = about;
+    editedUser.save();
     return res.json(editedUser);
   } catch (e) {
     console.log(e);
@@ -138,20 +148,40 @@ userRouter.get('/logout', (req, res) => {
   res.clearCookie('sid_socket').sendStatus(200);
 });
 
-userRouter.get('/usertreads', async (req,res) => {
-try{
-const {id} = req.session.user;
-const user = await User.findOne({
-  where: { id },
-  include:{model: Tread,
-    through: 'Subscribes',
-    as: 'userTreads'}
+userRouter.get('/usertreads', async (req, res) => {
+  try {
+    const { id } = req.session.user;
+    const user = await User.findOne({
+      where: { id },
+      include: { model: Tread, through: 'Subscribes', as: 'userTreads' },
+    });
+    return res.json(user.userTreads);
+  } catch {
+    return res.sendStatus(500);
+  }
 });
-return res.json(user.userTreads)
-} catch {
-  return res.sendStatus(500);
-}
-})
 
+userRouter.patch('/add-edit-photo', upload.single('avatar'), async (req, res) => {
+  const { id } = req.session.user;
+  try {
+    // Обновление пользователя с использованием информации о загруженном файле
+    const updatedUser = await User.update(
+      {
+        avatar: `../photo/${req.file.originalname}`,
+      },
+      { where: { id } },
+    );
+
+    if (!updatedUser) {
+      return res.sendStatus(400);
+    }
+
+    const editedUser = await User.findOne({ where: { id } });
+    return res.json(editedUser);
+  } catch (e) {
+    console.log(e);
+    return res.sendStatus(500);
+  }
+});
 
 module.exports = userRouter;

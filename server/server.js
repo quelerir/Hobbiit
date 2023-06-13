@@ -2,8 +2,8 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const session = require('express-session');
-const FileStore = require('session-file-store')(session);
 const cookieParser = require('cookie-parser');
+const FileStore = require('session-file-store')(session);
 const http = require('http');
 const userRouter = require('./routes/userRouter');
 
@@ -15,7 +15,6 @@ const postsRouter = require('./routes/postsRouter');
 const commentsRouter = require('./routes/commentRouter');
 const subscribeRouter = require('./routes/subscribeRouter');
 const currentUserRouter = require('./routes/currentUser');
-
 
 require('dotenv').config();
 
@@ -37,6 +36,7 @@ const sessionParser = session({
   },
 });
 
+app.use(express.static('photo'));
 app.use(cookieParser());
 app.use(sessionParser);
 app.use(express.json());
@@ -49,7 +49,6 @@ app.use('/api/posts', postsRouter);
 app.use('/api/comments', commentsRouter);
 app.use('/api/subscribe', subscribeRouter);
 app.use('/api/currentUser', currentUserRouter);
-
 
 app.use('/api/chat', chatRouter);
 
