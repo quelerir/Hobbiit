@@ -15,7 +15,11 @@ import {
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import CommentCard from './CommentCard';
-import { addCommentThunk, getCommentsThunk } from '../../redux/slices/commentsSlice';
+import {
+  addCommentThunk,
+  deleteCommentThunk,
+  getCommentsThunk,
+} from '../../redux/slices/commentsSlice';
 import SendIcon from '@mui/icons-material/Send';
 import EditPostModal from './EditPostModal';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -52,8 +56,12 @@ export default function PostCard({ post }: Props) {
     setInput({ commentbody: '' });
   };
 
-  const deleteHandler = () => {
-    dispatch(deletePostThunk(post.id));
+  const deleteHandler = (id: number, isPost: boolean) => {
+    if (isPost) {
+      dispatch(deletePostThunk(id));
+    } else {
+      dispatch(deleteCommentThunk(id));
+    }
   };
 
   return (
@@ -66,7 +74,7 @@ export default function PostCard({ post }: Props) {
           </Typography>
           <EditPostModal post={post} />
           <Button>
-            <DeleteForeverIcon onClick={deleteHandler} />
+            <DeleteForeverIcon onClick={() => deleteHandler(post.id, true)} />
           </Button>
         </Container>
         <Typography variant="body2" color="text.primary">
@@ -114,7 +122,7 @@ export default function PostCard({ post }: Props) {
         <Grid container spacing={2}>
           {commentsList?.map((comment) => (
             <Grid item xs={12} key={comment.id}>
-              <CommentCard comment={comment} postId={post.id} />
+              <CommentCard comment={comment} deleteHandler={deleteHandler} />
             </Grid>
           ))}
           <Button
