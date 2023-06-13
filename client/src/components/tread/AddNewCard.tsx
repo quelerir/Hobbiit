@@ -10,8 +10,6 @@ export default function AddNewCard() {
 
   const id = params.id;
 
-  console.log(params);
-
   const [input, setInput] = useState<PostFormType>({
     posttitle: '',
     postbody: '',

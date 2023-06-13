@@ -1,5 +1,5 @@
 const express = require('express');
-const { Post } = require('../db/models');
+const { Post, User } = require('../db/models');
 
 const postsRouter = express.Router();
 
@@ -8,7 +8,9 @@ postsRouter.get('/:treadId', async (req, res) => {
     const { treadId } = req.params;
     const treadPosts = await Post.findAll({
       where: { tread_id: treadId },
+      include: {model: User}
     });
+    console.log(treadPosts[0]);
     return res.json(treadPosts);
   } catch {
     return res.sendStatus(500);
@@ -27,7 +29,11 @@ postsRouter.post('/:treadId', async (req, res) => {
       postbody,
       postimg,
     });
-    return res.json(newPost);
+    const post = await Post.findOne({
+      where: { id: newPost.id },
+      include: {model: User}
+    })
+    return res.json(post);
   } catch {
     return res.sendStatus(500);
   }
@@ -38,7 +44,10 @@ postsRouter.patch('/:id', async (req, res) => {
     const { id } = req.params;
     const { posttitle, postbody, postimg } = req.body;
     await Post.update({ posttitle, postbody, postimg }, { where: { id } });
-    const post = await Post.findOne({ where: { id } });
+    const post = await Post.findOne({ 
+      where: { id },
+      include: {model: User},
+     });
     return res.json(post);
   } catch {
     return res.sendStatus(500);
@@ -47,7 +56,10 @@ postsRouter.patch('/:id', async (req, res) => {
 
 postsRouter.delete('/:id', async (req, res) => {
   try {
-    await Post.destroy({ where: { id: req.params.id } });
+    const post = await Post.findOne({ 
+      where: { id: req.params.id },
+     });
+    await post.destroy()
     return res.sendStatus(200);
   } catch (err) {
     return res.sendStatus(500);

@@ -73,6 +73,19 @@ userRouter.get('/check', (req, res) => {
   return res.sendStatus(401);
 });
 
+userRouter.get('/usertreads', async (req, res) => {
+  try {
+    const { id } = req.session.user;
+    const user = await User.findOne({
+      where: { id },
+      include: { model: Tread, through: 'Subscribes', as: 'userTreads' },
+    });
+    return res.json(user.userTreads);
+  } catch (err) {
+    return res.sendStatus(500);
+  }
+});
+
 userRouter.get('/:id', (req, res) => {
   const { id } = req.params;
   User.findByPk(id)
@@ -146,19 +159,6 @@ userRouter.delete('/delete/:id', async (req, res) => {
 userRouter.get('/logout', (req, res) => {
   req.session.destroy();
   res.clearCookie('sid_socket').sendStatus(200);
-});
-
-userRouter.get('/usertreads', async (req, res) => {
-  try {
-    const { id } = req.session.user;
-    const user = await User.findOne({
-      where: { id },
-      include: { model: Tread, through: 'Subscribes', as: 'userTreads' },
-    });
-    return res.json(user.userTreads);
-  } catch {
-    return res.sendStatus(500);
-  }
 });
 
 userRouter.patch('/add-edit-photo', upload.single('avatar'), async (req, res) => {
