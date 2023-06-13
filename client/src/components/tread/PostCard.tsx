@@ -30,11 +30,17 @@ export default function PostCard({ post }: Props) {
   const [input, setInput] = useState({ commentbody: '' });
 
   const comments = useAppSelector((state) => state.comment);
+  const [commentsList, setCommentsList] = useState(comments.slice(0, 3));
+  const [toggle, setToggle] = useState(true);
   console.log(comments);
 
   useEffect(() => {
     dispatch(getCommentsThunk(post.id));
   }, []);
+
+  useEffect(() => {
+    if (!commentsList.length) setCommentsList(comments.slice(0, 3));
+  }, [comments]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -106,11 +112,21 @@ export default function PostCard({ post }: Props) {
           </Grid>
         </Box>
         <Grid container spacing={2}>
-          {comments?.map((comment) => (
+          {commentsList?.map((comment) => (
             <Grid item xs={12} key={comment.id}>
               <CommentCard comment={comment} postId={post.id} />
             </Grid>
           ))}
+          <Button
+            variant="contained"
+            sx={{ ml: 2, mt: 2 }}
+            onClick={() => {
+              setCommentsList(toggle ? comments : comments.slice(0, 3));
+              setToggle((prev) => !prev);
+            }}
+          >
+            {!toggle ? 'Less...' : 'More...'}
+          </Button>
         </Grid>
       </CardActions>
     </Card>
