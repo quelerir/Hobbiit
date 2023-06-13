@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { debounce } from 'lodash';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -6,20 +7,21 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
-import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import Menu from '@mui/material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
-import { useAppDispatch } from '../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { logoutThunk } from '../../redux/slices/userSlice';
 import { useNavigate } from 'react-router-dom';
 import '../../../public/fonts.css';
+import { selectSearchThunk } from '../../redux/slices/searchSlice';
+import { List } from '@mui/material';
+import OneSearchUser from './OneSearchUser';
+import OneSearchTread from './OneSearchTread';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -67,6 +69,12 @@ type Props = {
 };
 
 export default function Navbar({ darkMode, toggleDarkMode }: Props) {
+  const [input, setInput] = useState('');
+
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  }, []);
+
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -74,6 +82,19 @@ export default function Navbar({ darkMode, toggleDarkMode }: Props) {
     handleMenuClose();
     dispatch(logoutThunk(navigate));
   };
+
+  const { searchUserResult = [], searchTreadResult = [] } = useAppSelector((state) => state.search);
+
+  const delayedDispatch = useCallback(
+    debounce((input: string) => {
+      dispatch(selectSearchThunk({ input }));
+    }, 400),
+    [],
+  );
+
+  useEffect(() => {
+    delayedDispatch(input);
+  }, [input, delayedDispatch]);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -160,8 +181,46 @@ export default function Navbar({ darkMode, toggleDarkMode }: Props) {
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
-            <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
+            <StyledInputBase
+              value={input}
+              onChange={handleInputChange}
+              name="input"
+              placeholder="Search…"
+              inputProps={{ 'aria-label': 'search' }}
+            />
           </Search>
+          {((input && searchUserResult.length !== 0) ||
+            (input && searchTreadResult.length !== 0)) && (
+            <List
+              dense
+              sx={{
+                width: '100%',
+                maxWidth: 300,
+                bgcolor: '#999',
+                position: 'absolute',
+                top: '64px',
+                left: '145px',
+                zIndex: '1',
+              }}
+            >
+              {searchUserResult.length !== 0 && (
+                <span style={{ justifyContent: 'center', display: 'flex', color: '#555' }}>
+                  User
+                </span>
+              )}
+              {searchUserResult?.map((user) => (
+                <OneSearchUser key={user.id} user={user} />
+              ))}
+              {searchTreadResult.length !== 0 && (
+                <span style={{ justifyContent: 'center', display: 'flex', color: '#555' }}>
+                  Treads
+                </span>
+              )}
+              {searchTreadResult.map((tread) => (
+                <OneSearchTread key={tread.id} tread={tread} />
+              ))}
+            </List>
+          )}
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton

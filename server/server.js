@@ -15,6 +15,7 @@ const postsRouter = require('./routes/postsRouter');
 const commentsRouter = require('./routes/commentRouter');
 const subscribeRouter = require('./routes/subscribeRouter');
 const currentUserRouter = require('./routes/currentUser');
+const searchRouter = require('./routes/seachRouter');
 
 require('dotenv').config();
 
@@ -49,8 +50,8 @@ app.use('/api/posts', postsRouter);
 app.use('/api/comments', commentsRouter);
 app.use('/api/subscribe', subscribeRouter);
 app.use('/api/currentUser', currentUserRouter);
-
 app.use('/api/chat', chatRouter);
+app.use('/api/search', searchRouter);
 
 const server = http.createServer(app);
 
