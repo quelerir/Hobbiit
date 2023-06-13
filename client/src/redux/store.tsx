@@ -5,12 +5,12 @@ import rootSaga from './sagas/rootSaga';
 import friendsReducer from './slices/friendsSlice';
 import treadReducer from './slices/treadsSlice';
 import commentsReducer from './slices/commentsSlice';
-import postsReducer from './slices/postsSlice'
+import postsReducer from './slices/postsSlice';
 import chatReducer from './slices/chatSlice';
 import userTreadsSlice from './slices/userTreadsSlice';
 import subscribersSlice from './slices/subscribersSlice';
 import currentUserSlice from './slices/currentUserSlice';
-
+import searchReducer from './slices/searchSlice';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -25,6 +25,7 @@ export const store = configureStore({
     usertreads: userTreadsSlice,
     subscribers: subscribersSlice,
     currentUser: currentUserSlice,
+    search: searchReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(sagaMiddleware),
 });
