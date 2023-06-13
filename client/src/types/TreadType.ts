@@ -15,4 +15,5 @@ export type TreadFormType = {
 export type TreadListType = {
     id?: number
     treadtitle?: string
+    treadimg?: string
 }

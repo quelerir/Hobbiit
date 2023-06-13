@@ -9,6 +9,9 @@ import {
     List,
     ListItem,
     ListItemText,
+    ListItemButton,
+    ListItemAvatar,
+    Avatar,
   } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { getUserTreadsThunk } from '../../redux/slices/userTreadsSlice';
@@ -29,19 +32,18 @@ export default function TreadList() {
       <Typography sx={{ fontSize: 18, fontWeight: 'bold', textTransform: 'uppercase' }}>
         Subscribes
       </Typography>
-      <Grid item xs={3}>
+      <Grid item xs={12}>
         <List>
-          {userTreads.map((tread) => {
-            return (
-              <ListItem key={tread.id}>
-                <Link to={`/tread/${tread.id}`}>
-            <ListItemText
-                  primary={`${tread.treadtitle}`}
-                />
-                </Link>
+          {userTreads.map((tread) => 
+              <ListItem disablePadding>
+                <ListItemButton component="a" href={`/tread/${tread.id}`}>
+                <ListItemAvatar>
+                <Avatar alt="photo" src={tread.treadimg} />
+                </ListItemAvatar>
+                <ListItemText primary={tread.treadtitle} />
+                </ListItemButton>
               </ListItem>
-            );
-        })}
+        )}
         </List>
       </Grid>
     </CardContent>
