@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { PostType } from '../../types/PostTypes';
 import {
   Box,
@@ -15,7 +15,11 @@ import {
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import CommentCard from './CommentCard';
-import { addCommentThunk, getCommentsThunk } from '../../redux/slices/commentsSlice';
+import {
+  addCommentThunk,
+  deleteCommentThunk,
+  getCommentsThunk,
+} from '../../redux/slices/commentsSlice';
 import SendIcon from '@mui/icons-material/Send';
 import EditPostModal from './EditPostModal';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -30,11 +34,21 @@ export default function PostCard({ post }: Props) {
   const [input, setInput] = useState({ commentbody: '' });
 
   const comments = useAppSelector((state) => state.comment);
+  const [commentsList, setCommentsList] = useState(comments.slice(0, 3));
+  const [toggle, setToggle] = useState(true);
   console.log(comments);
 
   useEffect(() => {
     dispatch(getCommentsThunk(post.id));
   }, []);
+
+  // useEffect(() => {
+  //   if (!commentsList.length) setCommentsList(comments.slice(0, 3));
+  // }, [comments]);
+
+  useEffect(() => {
+    setCommentsList(!toggle ? comments : comments.slice(0, 3));
+  }, [comments]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -46,9 +60,15 @@ export default function PostCard({ post }: Props) {
     setInput({ commentbody: '' });
   };
 
-  const deleteHandler = () => {
-    dispatch(deletePostThunk(post.id));
-  };
+  const deleteHandler = useCallback((id: number, isPost: boolean) => {
+    if (isPost) {
+      dispatch(deletePostThunk(id));
+    } else {
+      console.log('Delete');
+
+      dispatch(deleteCommentThunk(id));
+    }
+  }, []);
 
   return (
     <Card sx={{ mt: 2 }}>
@@ -60,7 +80,7 @@ export default function PostCard({ post }: Props) {
           </Typography>
           <EditPostModal post={post} />
           <Button>
-            <DeleteForeverIcon onClick={deleteHandler} />
+            <DeleteForeverIcon onClick={() => deleteHandler(post.id, true)} />
           </Button>
         </Container>
         <Typography variant="body2" color="text.primary">
@@ -88,8 +108,7 @@ export default function PostCard({ post }: Props) {
                 name="commentbody"
                 id="outlined-textarea"
                 label="Enter new comment"
-                multiline
-                sx={{ minWidth: '400px', maxWidth: '600px', height: '50px' }}
+                sx={{ minWidth: '400px', maxWidth: '600px', height: '30px' }}
               />
             </Grid>
             <Grid item xs={4}>
@@ -105,12 +124,22 @@ export default function PostCard({ post }: Props) {
             </Grid>
           </Grid>
         </Box>
-        <Grid container spacing={2}>
-          {comments?.map((comment) => (
+        <Grid container spacing={2} sx={{ mt: 2 }}>
+          {commentsList?.map((comment) => (
             <Grid item xs={12} key={comment.id}>
-              <CommentCard comment={comment} postId={post.id} />
+              <CommentCard comment={comment} deleteHandler={deleteHandler} />
             </Grid>
           ))}
+          <Button
+            variant="contained"
+            sx={{ ml: 2, mt: 2 }}
+            onClick={() => {
+              setCommentsList(toggle ? comments : comments.slice(0, 3));
+              setToggle((prev) => !prev);
+            }}
+          >
+            {!toggle ? 'Less...' : 'More...'}
+          </Button>
         </Grid>
       </CardActions>
     </Card>

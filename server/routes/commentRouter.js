@@ -8,7 +8,8 @@ commentsRouter.get('/:postId', async (req, res) => {
     const { postId } = req.params;
     const postComments = await Comment.findAll({
       where: { post_id: postId },
-      include: {model: User},
+      include: { model: User },
+      order: [['id', 'DESC']],
     });
     return res.json(postComments);
   } catch (err) {
@@ -19,12 +20,13 @@ commentsRouter.get('/:postId', async (req, res) => {
 commentsRouter.post('/:postId', async (req, res) => {
   try {
     const { postId } = req.params;
-    const { commentbody } = req.body;    const userId = req.session.user.id;
+    const { commentbody } = req.body;
+    const userId = req.session.user.id;
     const comment = await Comment.create({ post_id: postId, user_id: userId, commentbody });
     const newComment = await Comment.findOne({
-      where: {id: comment.id},
-      include: {model: User},
-    })
+      where: { id: comment.id },
+      include: { model: User },
+    });
     return res.json(newComment);
   } catch {
     return res.sendStatus(500);
@@ -38,7 +40,7 @@ commentsRouter.patch('/:id', async (req, res) => {
     await Comment.update({ commentbody }, { where: { id } });
     const comment = await Comment.findOne({
       where: { id },
-      include: {model: User},
+      include: { model: User },
     });
     return res.json(comment);
   } catch {
@@ -48,8 +50,8 @@ commentsRouter.patch('/:id', async (req, res) => {
 
 commentsRouter.delete('/:id', async (req, res) => {
   try {
-   const comment = await Comment.findOne({ where: { id: req.params.id } });
-   await comment.destroy()
+    const comment = await Comment.findOne({ where: { id: req.params.id } });
+    await comment.destroy();
     return res.sendStatus(200);
   } catch (err) {
     return res.sendStatus(500);
