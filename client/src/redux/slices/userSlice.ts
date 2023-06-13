@@ -14,14 +14,13 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<UserState>) => action.payload,
-    editUser: (state, action: PayloadAction<UserEditType>) => action.payload,
     deleteUser: (state, action: PayloadAction<UserType['id']>) => {
       action.payload;
     },
   },
 });
 
-export const { setUser, editUser, deleteUser } = userSlice.actions;
+export const { setUser, deleteUser } = userSlice.actions;
 
 export default userSlice.reducer;
 
@@ -66,15 +65,6 @@ export const logoutThunk =
       .catch(() => dispatch(setUser({ locationStatus: true })));
   };
 
-export const editUserThunk =
-  (id: UserType['id'], input: UserEditType): AppThunk =>
-  (dispatch) => {
-    axios
-      .patch<UserType>(`/api/user/${id}/edit`, input)
-      .then(({ data }) => dispatch(editUser(data)))
-      .catch(() => dispatch(editUser(input)));
-  };
-
 export const deleteUserThunk =
   (id: UserType['id'], navigate: NavigateFunction): AppThunk =>
   (dispatch) => {
@@ -86,3 +76,4 @@ export const deleteUserThunk =
       })
       .catch(() => dispatch(deleteUser(id)));
   };
+

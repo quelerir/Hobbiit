@@ -22,8 +22,9 @@ import TreadList from '../ui/TreadList';
 import emojis from '../utils/emojis';
 import { useParams } from 'react-router-dom';
 import { UPDATE_STATUS } from '../../types/wsTypes';
-import { setCurrentUserThunk } from '../../redux/slices/currentUserSlice';
-
+import { addEditPhotoThunk, setCurrentUserThunk } from '../../redux/slices/currentUserSlice';
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
 
 type Props = {
   darkMode: boolean;
@@ -31,10 +32,14 @@ type Props = {
 };
 
 export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Element {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const { id } = useParams();
+  const dispatch = useAppDispatch();
+
+  const [openAddPhoto, setOprAddPhoto] = useState(true);
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
   const [isEdit, setIsEdit] = useState(true);
-
-  const { id }= useParams();
 
   const handleClick = (status: string): void => {
     dispatch({ type: UPDATE_STATUS, payload: { status } });
@@ -42,15 +47,23 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
 
   const userSelector = useAppSelector((store) => store.user);
   const currentUser = useAppSelector((store) => store.currentUser);
-  const dispatch = useAppDispatch();
 
   useEffect(() => {
-  dispatch(setCurrentUserThunk(id));
-}, [id]);
+    dispatch(setCurrentUserThunk(id));
+  }, [id]);
   useEffect(() => {
     dispatch(getFriendsThunk(userSelector?.id));
   }, [userSelector?.id]);
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    setSelectedFile(file);
+  };
+
+  const photoEditHandler = () => {
+    dispatch(addEditPhotoThunk(selectedFile));
+    setOprAddPhoto(true);
+  };
 
   return (
     <div>
@@ -100,17 +113,29 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
                   </Typography>
                   <Typography variant="h5" component="div"></Typography>
                   <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    {currentUser?.location}
+                    Location: {currentUser?.location}
                   </Typography>
-                  <Typography variant="body2">{currentUser?.about}</Typography>
-                  <CardActions>
-                    <Button onClick={() => setIsEdit(false)}>Edit profile</Button>
-                    <DeleteUserModal />
-                  </CardActions>
+                  <Typography variant="body2">About: {currentUser?.about}</Typography>
+                  {userSelector?.id === currentUser?.id && (
+                    <CardActions>
+                      {openAddPhoto ? (
+                        <AddAPhotoIcon onClick={() => setOprAddPhoto(false)} />
+                      ) : (
+                        <>
+                          <SaveAltIcon onClick={photoEditHandler} />
+                          <input accept="image/*" type="file" onChange={handleFileChange} />
+                        </>
+                      )}
+                      <Button onClick={() => setIsEdit(false)}>Edit profile</Button>
+                      <DeleteUserModal />
+                    </CardActions>
+                  )}
                 </CardContent>
               </Card>
-            ) : ( (currentUser?.id === userSelector?.id) &&
-              <EditUserForm setIsEdit={setIsEdit} user={userSelector} />
+            ) : (
+              currentUser?.id === userSelector?.id && (
+                <EditUserForm setIsEdit={setIsEdit} user={userSelector} />
+              )
             )}
           </Grid>
           <Grid item xs={4}>
