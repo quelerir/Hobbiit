@@ -10,8 +10,8 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(User, { foreignKey: 'user_id'});
       this.belongsToMany(User, { through: 'Subscribes', as: 'userTreads', foreignKey: 'user_id' });
       this.belongsToMany(User, { through: 'Subscribes', as: 'subscribers', foreignKey: 'tread_id' });
-      this.belongsToMany(Tag, { through: 'Treadtags', as: 'oneTreadTags', foreignKey: 'tread_id' });
-      this.belongsToMany(Tag, { through: 'Treadtags', as: 'oneTagTreads', foreignKey: 'tag_id' });
+      this.belongsToMany(Tag, { through: 'TreadsTags', as: 'oneTreadTags', foreignKey: 'tread_id' });
+      this.belongsToMany(Tag, { through: 'TreadsTags', as: 'oneTagTreads', foreignKey: 'tag_id' });
     }
   }
   Tread.init({
