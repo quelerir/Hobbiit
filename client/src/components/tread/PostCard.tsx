@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { PostType } from '../../types/PostTypes';
 import {
   Box,
@@ -42,8 +42,12 @@ export default function PostCard({ post }: Props) {
     dispatch(getCommentsThunk(post.id));
   }, []);
 
+  // useEffect(() => {
+  //   if (!commentsList.length) setCommentsList(comments.slice(0, 3));
+  // }, [comments]);
+
   useEffect(() => {
-    if (!commentsList.length) setCommentsList(comments.slice(0, 3));
+    setCommentsList(!toggle ? comments : comments.slice(0, 3));
   }, [comments]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -56,13 +60,15 @@ export default function PostCard({ post }: Props) {
     setInput({ commentbody: '' });
   };
 
-  const deleteHandler = (id: number, isPost: boolean) => {
+  const deleteHandler = useCallback((id: number, isPost: boolean) => {
     if (isPost) {
       dispatch(deletePostThunk(id));
     } else {
+      console.log('Delete');
+
       dispatch(deleteCommentThunk(id));
     }
-  };
+  }, []);
 
   return (
     <Card sx={{ mt: 2 }}>
@@ -102,8 +108,7 @@ export default function PostCard({ post }: Props) {
                 name="commentbody"
                 id="outlined-textarea"
                 label="Enter new comment"
-                multiline
-                sx={{ minWidth: '400px', maxWidth: '600px', height: '50px' }}
+                sx={{ minWidth: '400px', maxWidth: '600px', height: '30px' }}
               />
             </Grid>
             <Grid item xs={4}>
@@ -119,7 +124,7 @@ export default function PostCard({ post }: Props) {
             </Grid>
           </Grid>
         </Box>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} sx={{ mt: 2 }}>
           {commentsList?.map((comment) => (
             <Grid item xs={12} key={comment.id}>
               <CommentCard comment={comment} deleteHandler={deleteHandler} />
