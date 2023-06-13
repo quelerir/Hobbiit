@@ -37,22 +37,17 @@ friendsRouter.post('/:id', async (req, res) => {
   }})
 
   friendsRouter.delete('/:id', async (req, res) => {
-    console.log('_____________666______________________________');
     try{
     const { id } = req.params;
     const sessionId = req.session.user.id;
-    console.log(id);
-    console.log(sessionId);
     const friend = await Friendship.findOne(
       {where: { 
         subjectuser_id: sessionId,
         objectuser_id: Number(id),
       }})
       await friend.destroy();
-      console.log(friend.id);
     return res.json(friend.id);
     } catch(err) {
-      console.error(err);
       return res.sendStatus(500);
     }  
     
