@@ -8,10 +8,10 @@ commentsRouter.get('/:postId', async (req, res) => {
     const { postId } = req.params;
     const postComments = await Comment.findAll({
       where: { post_id: postId },
+      include: {model: User},
     });
-    console.log(postComments, '++++++++++');
     return res.json(postComments);
-  } catch {
+  } catch (err) {
     return res.sendStatus(500);
   }
 });
@@ -19,10 +19,12 @@ commentsRouter.get('/:postId', async (req, res) => {
 commentsRouter.post('/:postId', async (req, res) => {
   try {
     const { postId } = req.params;
-    const { commentbody } = req.body;
-    console.log(commentbody, '===============');
-    const userId = req.session.user.id;
-    const newComment = await Comment.create({ post_id: postId, user_id: userId, commentbody });
+    const { commentbody } = req.body;    const userId = req.session.user.id;
+    const comment = await Comment.create({ post_id: postId, user_id: userId, commentbody });
+    const newComment = await Comment.findOne({
+      where: {id: comment.id},
+      include: {model: User},
+    })
     return res.json(newComment);
   } catch {
     return res.sendStatus(500);
@@ -34,7 +36,10 @@ commentsRouter.patch('/:id', async (req, res) => {
     const { id } = req.params;
     const { commentbody } = req.body;
     await Comment.update({ commentbody }, { where: { id } });
-    const comment = await Comment.findByPk(id);
+    const comment = await Comment.findOne({
+      where: { id },
+      include: {model: User},
+    });
     return res.json(comment);
   } catch {
     return res.sendStatus(500);
@@ -43,7 +48,8 @@ commentsRouter.patch('/:id', async (req, res) => {
 
 commentsRouter.delete('/:id', async (req, res) => {
   try {
-    await Comment.destroy({ where: { id: req.params.id } });
+   const comment = await Comment.findOne({ where: { id: req.params.id } });
+   await comment.destroy()
     return res.sendStatus(200);
   } catch (err) {
     return res.sendStatus(500);

@@ -33,7 +33,6 @@ function FriendsList() {
 
   const userSelector = useAppSelector((store) => store.user);
   const { friendsList = [], friendsOnline = [] } = useAppSelector((store) => store.friends);
-  console.log(friendsList, friendsOnline);
   const dispatch = useAppDispatch();
 
   useEffect(() => {

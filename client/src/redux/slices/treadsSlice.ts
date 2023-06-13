@@ -22,7 +22,7 @@ export const { setTread, addTread, editTread, deleteTread } = treadSlice.actions
 export default treadSlice.reducer;
 
 export const getTreadThunk =
-  (id): AppThunk =>
+  (id: TreadType['id']): AppThunk =>
   (dispatch) => {
     axios<TreadType>(`/api/tread/${id}`)
       .then(({ data }) => dispatch(setTread(data)))

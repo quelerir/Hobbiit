@@ -17,7 +17,6 @@ function createSocketChannel(socket: WebSocket): EventChannel<WsActionTypes> {
 
     socket.onmessage = function (event: MessageEvent<string>) {
       const receivedData = JSON.parse(event.data) as WsActionTypes;
-      console.log('receivedData', receivedData);
       emit(receivedData);
     };
 
