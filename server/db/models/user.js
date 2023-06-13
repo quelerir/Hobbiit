@@ -2,9 +2,8 @@ const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    
-    static associate({ Tread, Like, Post, Comment, Userstag }) {
-      this.hasMany(Tread, { foreignKey: 'user_id'});
+    static associate({ Tread, Like, Post, Comment, UsersTag }) {
+      this.hasMany(Tread, { foreignKey: 'user_id' });
       this.hasMany(Like, { foreignKey: 'user_id' });
       this.belongsToMany(Tread, {
         through: 'Subscribes',
@@ -13,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       this.belongsToMany(Tread, {
         through: 'Subscribes',
-        as: 'userTreads', 
+        as: 'userTreads',
         foreignKey: 'user_id',
       });
       this.hasMany(Post, { foreignKey: 'user_id' });
@@ -38,9 +37,17 @@ module.exports = (sequelize, DataTypes) => {
         as: 'ObjectChatUsers',
         foreignKey: 'objectchatuser_id',
       });
-      this.belongsToMany(Userstag, { through: 'Aproves', as: 'tagsaprovedbyUser', foreignKey: 'user_id' });
-      this.belongsToMany(Userstag, { through: 'Aproves', as: 'usersaprovesUsertag', foreignKey: 'userstag_id' });
-      this.hasMany(Userstag, { foreignKey: 'user_id' });
+      this.belongsToMany(UsersTag, {
+        through: 'Aproves',
+        as: 'tagsaprovedbyUser',
+        foreignKey: 'user_id',
+      });
+      this.belongsToMany(UsersTag, {
+        through: 'Aproves',
+        as: 'usersaprovesUsertag',
+        foreignKey: 'userstag_id',
+      });
+      this.hasMany(UsersTag, { foreignKey: 'user_id' });
     }
   }
   User.init(
