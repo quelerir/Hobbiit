@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useAppDispatch } from '../../redux/hooks';
-import { editUserThunk } from '../../redux/slices/userSlice';
 import { Box, Button, TextField } from '@mui/material';
 import { UserEditType } from '../../types/UserTypes';
 import { useParams } from 'react-router-dom';
+import { editUserThunk } from '../../redux/slices/currentUserSlice';
 
 type Props = {
   user: UserEditType;
@@ -33,7 +33,6 @@ export default function EditUserForm({ user, setIsEdit }: Props): JSX.Element {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     dispatch(editUserThunk(Number(id), input));
-    // setInput({ firstname: '', lastname: '', location: '', about: '' });
     setIsEdit(true);
   };
 
