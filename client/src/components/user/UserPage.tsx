@@ -25,6 +25,8 @@ import { UPDATE_STATUS } from '../../types/wsTypes';
 import { addEditPhotoThunk, setCurrentUserThunk } from '../../redux/slices/currentUserSlice';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import { setCurrentUserThunk } from '../../redux/slices/currentUserSlice';
+import { addFriendThunk, deleteFriendThunk } from '../../redux/slices/friendsSlice';
 
 type Props = {
   darkMode: boolean;
@@ -41,19 +43,37 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
   const [isEdit, setIsEdit] = useState(true);
 
+  const { id } = useParams();
+
   const handleClick = (status: string): void => {
     dispatch({ type: UPDATE_STATUS, payload: { status } });
   };
 
+  
+
   const userSelector = useAppSelector((store) => store.user);
   const currentUser = useAppSelector((store) => store.currentUser);
 
+  const { friendsList = [] } = useAppSelector((store) => store.friends);
+
+  const dispatch = useAppDispatch();
+  
+  const addFriendHandler = () => {dispatch(addFriendThunk(currentUser.id))}
+  const deleteFriendHandler = () => {
+    setListUpdated(true)
+    dispatch(deleteFriendThunk(currentUser.id))
+    
+  }
+
+  const [isFriend, setisFriend] = useState(false);
+
   useEffect(() => {
-    dispatch(setCurrentUserThunk(id));
+  dispatch(setCurrentUserThunk(id));
   }, [id]);
-  useEffect(() => {
-    dispatch(getFriendsThunk(userSelector?.id));
-  }, [userSelector?.id]);
+  
+  const [listUpdated, setListUpdated] = useState<boolean>(false)
+  
+
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -64,6 +84,18 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
     dispatch(addEditPhotoThunk(selectedFile));
     setOprAddPhoto(true);
   };
+      useEffect(() => {
+    if(listUpdated) {
+      dispatch(getFriendsThunk(userSelector?.id));      
+    }
+    setListUpdated(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listUpdated]);
+        
+  useEffect(() => { 
+    const friended = friendsList.filter((user) => user.id === currentUser.id);
+    setisFriend(friended.length > 0);
+  }, [friendsList, currentUser.id]);
 
   return (
     <div>
@@ -111,6 +143,16 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
                   >
                     {`${currentUser?.firstname} ${currentUser?.lastname}`}
                   </Typography>
+
+                 {(currentUser?.id !== userSelector?.id) && ((!isFriend && (
+      <Button size="small" color="primary" onClick={addFriendHandler}>
+          Add to Friends
+        </Button>)) ||
+        (isFriend && (
+        <Button size="small" color="secondary" onClick={deleteFriendHandler}>
+          Delete from Friends
+        </Button>)))}
+
                   <Typography variant="h5" component="div"></Typography>
                   <Typography sx={{ mb: 1.5 }} color="text.secondary">
                     Location: {currentUser?.location}

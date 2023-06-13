@@ -31,14 +31,20 @@ function FriendsList() {
     setOpenDialogId(null);
   };
 
+ 
+
   const userSelector = useAppSelector((store) => store.user);
   const { friendsList = [], friendsOnline = [] } = useAppSelector((store) => store.friends);
   const dispatch = useAppDispatch();
-
+  const [listUpdated, setListUpdated] = useState<boolean>(false)
   useEffect(() => {
-    dispatch(getFriendsThunk(userSelector?.id));
+    if(listUpdated) {
+      dispatch(getFriendsThunk(userSelector?.id));
+
+    }
+    setListUpdated(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userSelector?.id]);
+  }, [listUpdated]);
 
   return (
     <Card sx={{ minWidth: 375, maxWidth: 375, height: '85vh' }}>

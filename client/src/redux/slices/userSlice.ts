@@ -30,6 +30,14 @@ export const checkUserThunk = (): AppThunk => (dispatch) => {
     .catch(() => dispatch(setUser({ locationStatus: false })));
 };
 
+export const getUserThunk =
+  (id: UserType['id']): AppThunk =>
+  (dispatch) => {
+    axios<UserType>(`/api/user/${id}`)
+      .then(({ data }) => dispatch(setUser(data)))
+      .catch(() => dispatch(setUser({})));
+  };
+
 export const signUpThunk =
   (input: UserSignUpType, navigate: NavigateFunction): AppThunk =>
   (dispatch) => {

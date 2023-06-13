@@ -16,27 +16,34 @@ postsRouter.get('/:treadId', async (req, res) => {
 });
 
 postsRouter.post('/:treadId', async (req, res) => {
-    try {
-        const { treadId } = req.params.input;
-        const { posttitle, postbody, postimg } = req.body;
-        const userId = req.session.user.id
-        const newPost = await Post.create({tread_id: treadId, user_id: userId, posttitle, postbody, postimg});
-        return res.json(newPost);
-    } catch {
-        return res.sendStatus(500);
-    }
+  try {
+    const { treadId } = req.params;
+    const { posttitle, postbody, postimg } = req.body;
+    const userId = req.session.user.id;
+    const newPost = await Post.create({
+      tread_id: treadId,
+      user_id: userId,
+      posttitle,
+      postbody,
+      postimg,
+    });
+    return res.json(newPost);
+  } catch {
+    return res.sendStatus(500);
+  }
 });
 
 postsRouter.patch('/:id', async (req, res) => {
-    try {
+  try {
     const { id } = req.params;
-    await Post.update({ body: req.body.input }, { where: { id } });
-    const post = await Post.findByPk(id);
+    const { posttitle, postbody, postimg } = req.body;
+    await Post.update({ posttitle, postbody, postimg }, { where: { id } });
+    const post = await Post.findOne({ where: { id } });
     return res.json(post);
-} catch {
+  } catch {
     return res.sendStatus(500);
-}
-  });
+  }
+});
 
 postsRouter.delete('/:id', async (req, res) => {
   try {

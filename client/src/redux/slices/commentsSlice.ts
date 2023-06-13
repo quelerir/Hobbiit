@@ -9,46 +9,47 @@ export type CommentState = CommentType[];
 const initialState: CommentState = [];
 
 export const commentsSlice = createSlice({
-    name: 'comment',
-    initialState,
-    reducers: {
-      setComments: (state, action: PayloadAction<CommentType[]>) => action.payload,
-      addComment: (state, action: PayloadAction<CommentType>) => [action.payload, ...state],
-      editComment: (state, action: PayloadAction<CommentType>) => state.map((el) => el.id !== action.payload.id ? el : action.payload),
-      deleteComment: (state, action: PayloadAction<string>) =>
-        state.filter((el) => el.id !== Number(action.payload)),
-    },
-  });
+  name: 'comment',
+  initialState,
+  reducers: {
+    setComments: (state, action: PayloadAction<CommentType[]>) => action.payload,
+    addComment: (state, action: PayloadAction<CommentType>) => [action.payload, ...state],
+    editComment: (state, action: PayloadAction<CommentType>) =>
+      state.map((el) => (el.id !== action.payload.id ? el : action.payload)),
+    deleteComment: (state, action: PayloadAction<CommentType['id']>) =>
+      state.filter((el) => el.id !== Number(action.payload)),
+  },
+});
 
-  export const { setComments, addComment, deleteComment, editComment } = commentsSlice.actions;
+export const { setComments, addComment, deleteComment, editComment } = commentsSlice.actions;
 
-  export default commentsSlice.reducer;
+export default commentsSlice.reducer;
 
-  export const getCommentsThunk = (postId: string): AppThunk => (dispatch) => {
+export const getCommentsThunk =
+  (postId: CommentType['post_id']): AppThunk =>
+  (dispatch) => {
     axios<CommentType[]>(`/api/comments/${postId}`)
       .then(({ data }) => dispatch(setComments(data)))
       .catch(console.log);
   };
 
-  export const addCommentThunk =
-  (inputs: CommentFormType, postId: string): AppThunk =>
+export const addCommentThunk =
+  (input: CommentFormType, postId: CommentType['post_id']): AppThunk =>
   (dispatch) => {
     axios
-      .post<CommentType>(`/api/comments/${postId}`, inputs)
+      .post<CommentType>(`/api/comments/${postId}`, input)
       .then(({ data }) => dispatch(addComment(data)))
       .catch(console.log);
   };
 
-  export const editCommentThunk = 
-  (inputs: CommentFormType, id: string): AppThunk =>
+export const editCommentThunk =
+  (inputs: CommentFormType, id: CommentType['id']): AppThunk =>
   (dispatch) => {
-    axios
-    .patch<CommentType>(`/api/comments/${id}`)
-    .then(() => dispatch(editComment(id)))
-}
+    axios.patch<CommentType>(`/api/comments/${id}`).then(({ data }) => dispatch(editComment(data)));
+  };
 
 export const deleteCommentThunk =
-  (id: string): AppThunk =>
+  (id: CommentType['id']): AppThunk =>
   (dispatch) => {
     axios
       .delete(`/api/comments/${id}`)
