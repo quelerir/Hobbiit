@@ -30,7 +30,7 @@ export default function TreadList() {
     <Card sx={{ minWidth: 375, maxWidth: 375, height: '85vh' }}>
     <CardContent>
       <Typography sx={{ fontSize: 18, fontWeight: 'bold', textTransform: 'uppercase' }}>
-        Subscribes
+        Subscriptions
       </Typography>
       <Grid item xs={12}>
         <List>

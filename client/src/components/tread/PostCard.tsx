@@ -55,8 +55,10 @@ export default function PostCard({ post }: Props) {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
+    if (input.commentbody.length>0) {
     dispatch(addCommentThunk(input, post.id));
     setInput({ commentbody: '' });
+    }
   };
 
   const deleteHandler = useCallback((id: number, isPost: boolean) => {
