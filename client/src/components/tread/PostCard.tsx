@@ -24,6 +24,8 @@ import EditPostModal from './EditPostModal';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { deletePostThunk } from '../../redux/slices/postsSlice';
 import { SEND_LIKE } from '../../types/wsTypes';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 type Props = {
   post: PostType;
@@ -32,6 +34,7 @@ type Props = {
 export default function PostCard({ post }: Props) {
   const dispatch = useAppDispatch();
   const [input, setInput] = useState({ commentbody: '' });
+  const user = useAppSelector((store) => store.user);
 
   const comments = useAppSelector((state) => state.comment);
   const [commentsList, setCommentsList] = useState(comments.slice(0, 3));
@@ -88,14 +91,9 @@ export default function PostCard({ post }: Props) {
           <Typography variant="body2" color="text.primary">
             {post.postbody}
           </Typography>
-          <button type="button" onClick={likeHandler}>
-            as
-          </button>
         </CardContent>
+        
         <CardActions sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Typography variant="body1" color="text.primary">
-            {post.likecount}
-          </Typography>
           <Typography variant="h6" color="text.primary">
             Comments
           </Typography>
@@ -104,10 +102,52 @@ export default function PostCard({ post }: Props) {
             onSubmit={(e) => handleSubmit(e)}
             sx={{
               '& .MuiTextField-root': { mt: 2, width: '100%' },
+          <EditPostModal post={post} />
+          <Button>
+            <DeleteForeverIcon onClick={() => deleteHandler(post.id, true)} />
+          </Button>
+        </Container>
+          <Grid container spacing={10}>
+            <Grid item xs={8}>
+              <TextField
+                value={input.commentbody}
+                onChange={handleChange}
+                name="commentbody"
+                id="outlined-textarea"
+                label="Enter new comment"
+                sx={{ minWidth: '400px', maxWidth: '600px', height: '30px' }}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <Button
+                sx={{ mt: 2, fontSize: '0.77rem', height: '55px' }}
+                variant="contained"
+                color="primary"
+                size="medium"
+                type="submit"
+              >
+                <SendIcon />
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
+        <Grid container spacing={2} sx={{ mt: 2 }}>
+          {commentsList?.map((comment) => (
+            <Grid item xs={12} key={comment.id}>
+              <CommentCard comment={comment} deleteHandler={deleteHandler} />
+            </Grid>
+          ))}
+          <Button
+            variant="contained"
+            sx={{ ml: 2, mt: 2 }}
+            onClick={() => {
+              setCommentsList(toggle ? comments : comments.slice(0, 3));
+              setToggle((prev) => !prev);
             }}
             noValidate
             autoComplete="off"
           >
+
             <Grid container spacing={10}>
               <Grid item xs={8}>
                 <TextField
@@ -146,11 +186,15 @@ export default function PostCard({ post }: Props) {
                 setToggle((prev) => !prev);
               }}
             >
-              {!toggle ? 'Less...' : 'More...'}
-            </Button>
-          </Grid>
-        </CardActions>
-      </Card>
-    </Container>
+            {!toggle ? 'Less...' : 'More...'}
+          </Button>
+          <Typography variant="body1" color="text.primary"></Typography>
+          <div style={{ position: 'sticky', marginLeft: '410px', marginTop: '20px' }}>
+            <FavoriteBorderIcon onClick={likeHandler} />
+            {post.likecount}
+          </div>
+        </Grid>
+      </CardActions>
+    </Card>
   );
 }
