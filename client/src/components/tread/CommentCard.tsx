@@ -11,7 +11,6 @@ type Props = {
 };
 
 function CommentCard({ comment, deleteHandler }: Props) {
-  console.log(comment);
 
   return (
     <Card sx={{ mt: 1, backgroundColor: 'cornflowerblue' }}>

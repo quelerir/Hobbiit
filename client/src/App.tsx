@@ -9,7 +9,6 @@ import { checkUserThunk } from './redux/slices/userSlice';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { SOCKET_INIT } from './types/wsTypes';
-import ProtectedRoute from './hoc/ProtectedRoute';
 
 function App(): JSX.Element {
   const user = useAppSelector((store) => store.user);
