@@ -27,7 +27,7 @@ export default userSlice.reducer;
 export const checkUserThunk = (): AppThunk => (dispatch) => {
   axios<UserType>('/api/user/check')
     .then(({ data }) => dispatch(setUser({ ...data, locationStatus: true })))
-    .catch(() => dispatch(setUser({ locationStatus: false })));
+    .catch(() => dispatch(setUser({ locationStatus: true })));
 };
 
 export const getUserThunk =
@@ -84,4 +84,3 @@ export const deleteUserThunk =
       })
       .catch(() => dispatch(deleteUser(id)));
   };
-
