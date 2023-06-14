@@ -14,9 +14,7 @@ export default function EditUserForm({ user, setIsEdit }: Props): JSX.Element {
   const params = useParams();
 
   const id = params.id;
-
-  console.log(params);
-
+  
   const [input, setInput] = useState<UserEditType>({
     firstname: user.firstname,
     lastname: user.lastname,
