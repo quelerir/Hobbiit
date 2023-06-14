@@ -64,8 +64,6 @@ export default function PostCard({ post }: Props) {
     if (isPost) {
       dispatch(deletePostThunk(id));
     } else {
-      console.log('Delete');
-
       dispatch(deleteCommentThunk(id));
     }
   }, []);

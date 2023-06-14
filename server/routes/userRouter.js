@@ -53,7 +53,6 @@ userRouter.post('/login', async (req, res) => {
       if (!(await bcrypt.compare(password, user.password))) {
         return res.sendStatus(401);
       }
-
       const sessionUser = JSON.parse(JSON.stringify(user));
       delete sessionUser.password;
       req.session.user = sessionUser;
@@ -86,6 +85,11 @@ userRouter.get('/usertreads', async (req, res) => {
   }
 });
 
+userRouter.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.clearCookie('sid_socket').sendStatus(200);
+});
+
 userRouter.get('/:id', (req, res) => {
   const { id } = req.params;
   User.findByPk(id)
@@ -99,11 +103,6 @@ userRouter.get('/:id', (req, res) => {
       console.log(e);
       return res.sendStatus(500);
     });
-});
-
-userRouter.get('/logout', (req, res) => {
-  req.session.destroy();
-  res.clearCookie('sid_socket').sendStatus(200);
 });
 
 userRouter.patch('/:id/edit', async (req, res) => {
@@ -154,11 +153,6 @@ userRouter.delete('/delete/:id', async (req, res) => {
     }
   }
   return res.sendStatus(400);
-});
-
-userRouter.get('/logout', (req, res) => {
-  req.session.destroy();
-  res.clearCookie('sid_socket').sendStatus(200);
 });
 
 userRouter.patch('/add-edit-photo', upload.single('avatar'), async (req, res) => {
