@@ -24,6 +24,7 @@ module.exports = {
           model: 'Posts',
           key: 'id',
         },
+        onDelete: 'cascade',
       },
       createdAt: {
         allowNull: false,

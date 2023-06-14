@@ -35,7 +35,7 @@ export default function TreadList() {
       <Grid item xs={12}>
         <List>
           {userTreads.map((tread) => 
-              <ListItem disablePadding>
+              <ListItem disablePadding key={tread.id}>
                 <ListItemButton component="a" href={`/tread/${tread.id}`}>
                 <ListItemAvatar>
                 <Avatar alt="photo" src={tread.treadimg} />
