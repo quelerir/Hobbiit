@@ -36,12 +36,13 @@ export default function PostCard({ post }: Props) {
   const [input, setInput] = useState({ commentbody: '' });
   const user = useAppSelector((store) => store.user);
 
-  const comments = useAppSelector((state) => state.comment);
+  const allComments = useAppSelector((state) => state.comment);
+  const comments = allComments.filter((comment) => comment.post_id === post.id)
   const [commentsList, setCommentsList] = useState(comments.slice(0, 3));
   const [toggle, setToggle] = useState(true);
 
   useEffect(() => {
-    dispatch(getCommentsThunk(post.id));
+    dispatch(getCommentsThunk());
   }, []);
 
   useEffect(() => {
@@ -83,18 +84,23 @@ export default function PostCard({ post }: Props) {
             <Typography gutterBottom variant="h5" component="div">
               {post.posttitle}
             </Typography>
-            <EditPostModal post={post} />
-            <Button>
+            {(user.id === post.user_id) &&(<EditPostModal post={post} />)}
+            {(user.id === post.user_id) && (<Button>
               <DeleteForeverIcon onClick={() => deleteHandler(post.id, true)} />
-            </Button>
+            </Button>)}
           </Container>
           <Typography variant="body2" color="text.primary">
             {post.postbody}
           </Typography>
+          <Typography variant="body1" color="text.primary"></Typography>
+            <div style={{ position: 'sticky', marginLeft: '410px', marginTop: '20px' }}>
+              <FavoriteBorderIcon onClick={likeHandler} />
+              {post.likecount}
+            </div>
         </CardContent>
 
         <CardActions sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Typography variant="h6" color="text.primary">
+          <Typography variant="subtitle2" color="text.primary" align="left">
             Comments
           </Typography>
           <Box
@@ -117,7 +123,7 @@ export default function PostCard({ post }: Props) {
                   sx={{ minWidth: '400px', maxWidth: '600px', height: '30px' }}
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={2}>
                 <Button
                   sx={{ mt: 2, fontSize: '0.77rem', height: '55px' }}
                   variant="contained"
@@ -132,13 +138,14 @@ export default function PostCard({ post }: Props) {
           </Box>
           <Grid container spacing={2} sx={{ mt: 2 }}>
             {commentsList?.map((comment) => (
-              <Grid item xs={12} key={comment.id}>
+              <Grid item xs={10} key={comment.id}>
                 <CommentCard comment={comment} deleteHandler={deleteHandler} />
               </Grid>
             ))}
+            <Grid item xs={10}>
             <Button
               variant="contained"
-              sx={{ ml: 2, mt: 2 }}
+              sx={{ ml: 2, mt: 2, borderRadius: 0 }}
               onClick={() => {
                 setCommentsList(toggle ? comments : comments.slice(0, 3));
                 setToggle((prev) => !prev);
@@ -146,11 +153,7 @@ export default function PostCard({ post }: Props) {
             >
               {!toggle ? 'Less...' : 'More...'}
             </Button>
-            <Typography variant="body1" color="text.primary"></Typography>
-            <div style={{ position: 'sticky', marginLeft: '410px', marginTop: '20px' }}>
-              <FavoriteBorderIcon onClick={likeHandler} />
-              {post.likecount}
-            </div>
+            </Grid>
           </Grid>
         </CardActions>
       </Card>

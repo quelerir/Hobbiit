@@ -3,15 +3,13 @@ const { Comment, User } = require('../db/models');
 
 const commentsRouter = express.Router();
 
-commentsRouter.get('/:postId', async (req, res) => {
+commentsRouter.get('/', async (req, res) => {
   try {
-    const { postId } = req.params;
-    const postComments = await Comment.findAll({
-      where: { post_id: postId },
+    const allComments = await Comment.findAll({
       include: { model: User },
       order: [['id', 'DESC']],
     });
-    return res.json(postComments);
+    return res.json(allComments);
   } catch (err) {
     return res.sendStatus(500);
   }
