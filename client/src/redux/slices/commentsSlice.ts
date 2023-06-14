@@ -5,6 +5,7 @@ import type { CommentType, CommentFormType } from '../../types/CommentTypes';
 import type { AppThunk } from '../hooks';
 
 export type CommentState = CommentType[];
+export type CommentStateArray = CommentState;
 
 const initialState: CommentState = [];
 
@@ -26,9 +27,9 @@ export const { setComments, addComment, deleteComment, editComment } = commentsS
 export default commentsSlice.reducer;
 
 export const getCommentsThunk =
-  (postId: CommentType['post_id']): AppThunk =>
+  (): AppThunk =>
   (dispatch) => {
-    axios<CommentType[]>(`/api/comments/${postId}`)
+    axios<CommentType[]>(`/api/comments/`)
       .then(({ data }) => dispatch(setComments(data)))
       .catch(console.log);
   };

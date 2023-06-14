@@ -6,7 +6,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { useAppDispatch } from '../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { editCommentThunk } from '../../redux/slices/commentsSlice';
 
 type Props = {
@@ -16,12 +16,12 @@ type Props = {
 
 function CommentCard({ comment, deleteHandler }: Props) {
 
-  console.log(comment);
   const [isEdit, setEdit] = useState(false);
 
   const [input, setInput] = useState<CommentFormType>({
     commentbody: comment.commentbody,
   });
+  const user = useAppSelector((store) => store.user);
 
   const dispatch = useAppDispatch();
 
@@ -62,7 +62,7 @@ function CommentCard({ comment, deleteHandler }: Props) {
           </Typography>
         </Grid>
         <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          {isEdit ? (
+          {(user.id === comment.user_id) && (isEdit ? (
             <>
               <Button color="info" onClick={(e) => editHandler(e)}>
                 <SaveIcon />
@@ -80,7 +80,7 @@ function CommentCard({ comment, deleteHandler }: Props) {
                 <DeleteForeverIcon />
               </Button>
             </>
-          )}
+          ))}
         </Grid>
       </Grid>
     </Card>
