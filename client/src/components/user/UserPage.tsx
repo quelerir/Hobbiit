@@ -34,6 +34,7 @@ type Props = {
 
 export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Element {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  
 
   const { id } = useParams();
   const dispatch = useAppDispatch();

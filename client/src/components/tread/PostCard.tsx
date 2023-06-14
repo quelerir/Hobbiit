@@ -25,7 +25,6 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { deletePostThunk } from '../../redux/slices/postsSlice';
 import { SEND_LIKE } from '../../types/wsTypes';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 
 type Props = {
   post: PostType;
