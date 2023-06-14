@@ -2,7 +2,6 @@ const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-
     static associate({ Tread, Like, Post, Comment, UsersTag }) {
       this.hasMany(Tread, { foreignKey: 'user_id'});
       this.hasMany(Like, { foreignKey: 'user_id' });

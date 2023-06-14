@@ -1,5 +1,5 @@
 const express = require('express');
-const { Tread, User } = require('../db/models');
+const { Tread, User, Tag } = require('../db/models');
 
 const treadsRouter = express.Router();
 
@@ -8,6 +8,11 @@ treadsRouter.get('/:id', async (req, res) => {
     const { id } = req.params;
     const tread = await Tread.findOne({
       where: { id },
+      include: {
+        model: Tag,
+        through: 'TreadsTags',
+        as: 'oneTreadTags'
+  }
     });
     return res.json(tread);
   } catch {
@@ -36,7 +41,15 @@ treadsRouter.post('/add', async (req, res) => {
       const { treadtitle, treadbody, treadimg } = req.body;
       const userId = req.session.user.id
       const newTread = await Tread.create({ user_id: userId, treadtitle, treadbody, treadimg });
-      return res.json(newTread);
+      const tread = await Tread.findOne({
+        where: {id: newTread.id}, 
+        include: {
+          model: Tag,
+          through: 'TreadsTags',
+          as: 'oneTreadTags'
+    }
+  });
+      return res.json(tread);
   } catch {
       return res.sendStatus(500);
   }
@@ -46,7 +59,15 @@ treadsRouter.patch('/:id', async (req, res) => {
   try {
       const { treadtitle, treadbody, treadimg } = req.body;
       const { id } = req.params;
-      const tread = await Tread.create({ treadtitle, treadbody, treadimg }, {where: id});
+      const patchedTread = await Tread.create({ treadtitle, treadbody, treadimg }, {where: id});
+      const tread = await Tread.findOne({
+        where: {id: patchedTread.id}, 
+        include: {
+          model: Tag,
+          through: 'TreadsTags',
+          as: 'oneTreadTags'
+    }
+  });
       return res.json(tread);
   } catch {
       return res.sendStatus(500);

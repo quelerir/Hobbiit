@@ -43,9 +43,11 @@ export const addCommentThunk =
   };
 
 export const editCommentThunk =
-  (inputs: CommentFormType, id: CommentType['id']): AppThunk =>
+  (input: CommentFormType, id: CommentType['id']): AppThunk =>
   (dispatch) => {
-    axios.patch<CommentType>(`/api/comments/${id}`).then(({ data }) => dispatch(editComment(data)));
+    axios
+      .patch<CommentType>(`/api/comments/${id}`, input)
+      .then(({ data }) => dispatch(editComment(data)));
   };
 
 export const deleteCommentThunk =
