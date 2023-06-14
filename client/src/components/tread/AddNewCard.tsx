@@ -6,6 +6,7 @@ import { Box, Button, TextField } from '@mui/material';
 import { addPostThunk } from '../../redux/slices/postsSlice';
 
 export default function AddNewCard() {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const params = useParams();
 
   const id = params.id;
@@ -22,11 +23,18 @@ export default function AddNewCard() {
 
   const dispatch = useAppDispatch();
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    setSelectedFile(file);
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    dispatch(addPostThunk(input, Number(id)));
+    dispatch(addPostThunk(selectedFile, input, Number(id)));
     setInput({ posttitle: '', postbody: '', postimg: '' });
+    setSelectedFile(null);
   };
+
   return (
     <Box
       component="form"
@@ -53,14 +61,7 @@ export default function AddNewCard() {
         label="Body"
         multiline
       />
-      <TextField
-        value={input.postimg}
-        onChange={handleChange}
-        name="postimg"
-        id="outlined-textarea"
-        label="Image"
-        multiline
-      />
+      <TextField name="postimg" type="file" onChange={handleFileChange} accept="image/*" />
       <br />
       <Button sx={{ mt: 2 }} variant="contained" color="success" size="large" type="submit">
         Add new post

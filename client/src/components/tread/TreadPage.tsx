@@ -58,7 +58,7 @@ export default function TreadPage({ darkMode, toggleDarkMode }: Props): JSX.Elem
   useEffect(() => {
     dispatch(getTreadThunk(Number(id)));
   }, []);
-  
+
   useEffect(() => {
     dispatch(getSubscribersThunk(id));
   }, []);

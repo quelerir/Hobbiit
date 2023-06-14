@@ -34,10 +34,14 @@ export const getPostsThunk =
   };
 
 export const addPostThunk =
-  (input: PostFormType, treadId: PostType['tread_id']): AppThunk =>
+  (avatar, input: PostFormType, treadId: PostType['tread_id']): AppThunk =>
   (dispatch) => {
+    const formData = new FormData();
+    formData.append('avatar', avatar);
+    formData.append('posttitle', input.posttitle);
+    formData.append('postbody', input.postbody)
     axios
-      .post<PostType>(`/api/posts/${treadId}`, input)
+      .post<PostType>(`/api/posts/${treadId}`, formData)
       .then(({ data }) => dispatch(addPost(data)))
       .catch(console.log);
   };
