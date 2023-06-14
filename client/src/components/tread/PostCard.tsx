@@ -24,6 +24,8 @@ import EditPostModal from './EditPostModal';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { deletePostThunk } from '../../redux/slices/postsSlice';
 import { SEND_LIKE } from '../../types/wsTypes';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 type Props = {
   post: PostType;
@@ -32,6 +34,7 @@ type Props = {
 export default function PostCard({ post }: Props) {
   const dispatch = useAppDispatch();
   const [input, setInput] = useState({ commentbody: '' });
+  const user = useAppSelector((store) => store.user);
 
   const comments = useAppSelector((state) => state.comment);
   const [commentsList, setCommentsList] = useState(comments.slice(0, 3));
@@ -83,14 +86,8 @@ export default function PostCard({ post }: Props) {
         <Typography variant="body2" color="text.primary">
           {post.postbody}
         </Typography>
-        <button type="button" onClick={likeHandler}>
-          as
-        </button>
       </CardContent>
       <CardActions sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography variant="body1" color="text.primary">
-          {post.likecount}
-        </Typography>
         <Typography variant="h6" color="text.primary">
           Comments
         </Typography>
@@ -143,6 +140,11 @@ export default function PostCard({ post }: Props) {
           >
             {!toggle ? 'Less...' : 'More...'}
           </Button>
+          <Typography variant="body1" color="text.primary"></Typography>
+          <div style={{ position: 'sticky', marginLeft: '410px', marginTop: '20px' }}>
+            <FavoriteBorderIcon onClick={likeHandler} />
+            {post.likecount}
+          </div>
         </Grid>
       </CardActions>
     </Card>
