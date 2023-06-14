@@ -57,6 +57,8 @@ export default function PostCard({ post }: Props) {
 
   const deleteHandler = useCallback((id: number, isPost: boolean) => {
     if (isPost) {
+      console.log('Post deleted');
+
       dispatch(deletePostThunk(id));
     } else {
       dispatch(deleteCommentThunk(id));
