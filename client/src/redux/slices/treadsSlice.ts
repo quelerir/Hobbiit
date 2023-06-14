@@ -41,7 +41,7 @@ export const addTreadThunk =
 export const editTreadThunk =
   (inputs: TreadFormType, id: TreadType['id']): AppThunk =>
   (dispatch) => {
-    axios.patch<TreadType>(`/api/tread/${id}`).then(() => dispatch(editTread(id)));
+    axios.patch<TreadType>(`/api/tread/${id}`, inputs).then(() => dispatch(editTread(id)));
   };
 
 export const deleteTreadThunk =
