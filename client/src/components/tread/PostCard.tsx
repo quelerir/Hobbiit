@@ -9,7 +9,6 @@ import {
   CardMedia,
   Container,
   Grid,
-  List,
   TextField,
   Typography,
 } from '@mui/material';
@@ -24,6 +23,7 @@ import SendIcon from '@mui/icons-material/Send';
 import EditPostModal from './EditPostModal';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { deletePostThunk } from '../../redux/slices/postsSlice';
+import { SEND_LIKE } from '../../types/wsTypes';
 
 type Props = {
   post: PostType;
@@ -36,15 +36,10 @@ export default function PostCard({ post }: Props) {
   const comments = useAppSelector((state) => state.comment);
   const [commentsList, setCommentsList] = useState(comments.slice(0, 3));
   const [toggle, setToggle] = useState(true);
-  console.log(comments);
 
   useEffect(() => {
     dispatch(getCommentsThunk(post.id));
   }, []);
-
-  // useEffect(() => {
-  //   if (!commentsList.length) setCommentsList(comments.slice(0, 3));
-  // }, [comments]);
 
   useEffect(() => {
     setCommentsList(!toggle ? comments : comments.slice(0, 3));
@@ -68,6 +63,10 @@ export default function PostCard({ post }: Props) {
     }
   }, []);
 
+  const likeHandler = () => {
+    dispatch({ type: SEND_LIKE, payload: { postId: post.id } });
+  };
+
   return (
     <Card sx={{ mt: 2 }}>
       <CardMedia component="img" alt="post img" height="140" image={post.postimg} />
@@ -84,8 +83,14 @@ export default function PostCard({ post }: Props) {
         <Typography variant="body2" color="text.primary">
           {post.postbody}
         </Typography>
+        <button type="button" onClick={likeHandler}>
+          as
+        </button>
       </CardContent>
       <CardActions sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Typography variant="body1" color="text.primary">
+          {post.likecount}
+        </Typography>
         <Typography variant="h6" color="text.primary">
           Comments
         </Typography>

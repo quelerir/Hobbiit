@@ -16,7 +16,7 @@ import MoreIcon from '@mui/icons-material/MoreVert';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { logoutThunk } from '../../redux/slices/userSlice';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../../../public/fonts.css';
 import { selectSearchThunk } from '../../redux/slices/searchSlice';
 import { List } from '@mui/material';
@@ -70,6 +70,8 @@ type Props = {
 
 export default function Navbar({ darkMode, toggleDarkMode }: Props) {
   const [input, setInput] = useState('');
+
+  const user = useAppSelector((state) => state.user);
 
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
@@ -136,7 +138,10 @@ export default function Navbar({ darkMode, toggleDarkMode }: Props) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <Link to={`/user/${user.id}`}>
+        <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      </Link>
+
       <MenuItem onClick={logoutHandler}>Logout</MenuItem>
     </Menu>
   );

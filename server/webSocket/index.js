@@ -1,14 +1,11 @@
 const { WebSocketServer } = require('ws');
-const { Messages, User } = require('../db/models');
+const { Messages, User, Like, Post } = require('../db/models');
 
 const wss = new WebSocketServer({ clientTracking: false, noServer: true });
 
 wss.on('connection', (ws, request, wsMap) => {
   const { id } = request.session.user;
   wsMap.set(id, { ws, user: request.session.user });
-
-  console.log({ wsMap });
-
   for (const [, wsClient] of wsMap) {
     wsClient.ws.send(
       JSON.stringify({
@@ -72,6 +69,34 @@ wss.on('connection', (ws, request, wsMap) => {
         }
         break;
       }
+      case 'SEND_LIKE': {
+        const { postId } = payload;
+        const existingLike = await Like.findOne({ where: { post_id: postId, user_id: id } });
+        if (existingLike) {
+          const onePost = await Post.findByPk(postId);
+          onePost.likecount -= 1;
+          await onePost.save();
+          existingLike.destroy();
+        }
+        if (!existingLike) {
+          await Like.create({ post_id: postId, user_id: id, islike: true });
+          const onePost = await Post.findByPk(postId);
+          onePost.likecount += 1;
+          await onePost.save();
+        }
+        const savePost = await Post.findByPk(postId);
+
+        const payloadToSend = {
+          type: 'post/editPost',
+          payload: savePost,
+        };
+
+        for (const [, wsClient] of wsMap) {
+          wsClient.ws.send(JSON.stringify(payloadToSend));
+        }
+        break;
+      }
+
       default:
         break;
     }

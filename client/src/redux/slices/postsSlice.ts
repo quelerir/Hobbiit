@@ -9,7 +9,7 @@ export type PostsState = PostType[];
 const initialState: PostsState = [];
 
 export const postsSlice = createSlice({
-  name: 'posts',
+  name: 'post',
   initialState,
   reducers: {
     setPosts: (state, action: PayloadAction<PostType[]>) => action.payload,

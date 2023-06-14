@@ -15,6 +15,7 @@ type Props = {
 };
 
 function CommentCard({ comment, deleteHandler }: Props) {
+
   console.log(comment);
   const [isEdit, setEdit] = useState(false);
 

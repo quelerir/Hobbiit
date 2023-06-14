@@ -1,4 +1,3 @@
-'use strict';
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -7,19 +6,20 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       posttitle: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       postbody: {
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
       },
       postimg: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       likecount: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
       },
       user_id: {
         type: Sequelize.INTEGER,
@@ -44,10 +44,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),
-      }
+      },
     });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Posts');
-  }
+  },
 };
