@@ -60,6 +60,8 @@ export default function PostCard({ post }: Props) {
 
   const deleteHandler = useCallback((id: number, isPost: boolean) => {
     if (isPost) {
+      console.log('Post deleted');
+
       dispatch(deletePostThunk(id));
     } else {
       dispatch(deleteCommentThunk(id));
@@ -71,35 +73,40 @@ export default function PostCard({ post }: Props) {
   };
 
   return (
-    <Card sx={{ mt: 2 }}>
-      <CardMedia component="img" alt="post img" height="140" image={post.postimg} />
-      <CardContent>
-        <Container sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-          <Typography gutterBottom variant="h5" component="div">
-            {post.posttitle}
+    <Container maxWidth="lg" sx={{ mt: 5 }}>
+      <Card sx={{ mt: 2 }}>
+        {post.postimg && (
+          <CardMedia component="img" alt="post img" height="140" image={post.postimg} />
+        )}
+        <CardContent>
+          <Container sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            <Typography gutterBottom variant="h5" component="div">
+              {post.posttitle}
+            </Typography>
+            <EditPostModal post={post} />
+            <Button>
+              <DeleteForeverIcon onClick={() => deleteHandler(post.id, true)} />
+            </Button>
+          </Container>
+          <Typography variant="body2" color="text.primary">
+            {post.postbody}
           </Typography>
+        </CardContent>
+        
+        <CardActions sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Typography variant="h6" color="text.primary">
+            Comments
+          </Typography>
+          <Box
+            component="form"
+            onSubmit={(e) => handleSubmit(e)}
+            sx={{
+              '& .MuiTextField-root': { mt: 2, width: '100%' },
           <EditPostModal post={post} />
           <Button>
             <DeleteForeverIcon onClick={() => deleteHandler(post.id, true)} />
           </Button>
         </Container>
-        <Typography variant="body2" color="text.primary">
-          {post.postbody}
-        </Typography>
-      </CardContent>
-      <CardActions sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography variant="h6" color="text.primary">
-          Comments
-        </Typography>
-        <Box
-          component="form"
-          onSubmit={(e) => handleSubmit(e)}
-          sx={{
-            '& .MuiTextField-root': { mt: 2, width: '100%' },
-          }}
-          noValidate
-          autoComplete="off"
-        >
           <Grid container spacing={10}>
             <Grid item xs={8}>
               <TextField
@@ -137,7 +144,48 @@ export default function PostCard({ post }: Props) {
               setCommentsList(toggle ? comments : comments.slice(0, 3));
               setToggle((prev) => !prev);
             }}
+            noValidate
+            autoComplete="off"
           >
+
+            <Grid container spacing={10}>
+              <Grid item xs={8}>
+                <TextField
+                  value={input.commentbody}
+                  onChange={handleChange}
+                  name="commentbody"
+                  id="outlined-textarea"
+                  label="Enter new comment"
+                  sx={{ minWidth: '400px', maxWidth: '600px', height: '30px' }}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <Button
+                  sx={{ mt: 2, fontSize: '0.77rem', height: '55px' }}
+                  variant="contained"
+                  color="primary"
+                  size="medium"
+                  type="submit"
+                >
+                  <SendIcon />
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
+          <Grid container spacing={2} sx={{ mt: 2 }}>
+            {commentsList?.map((comment) => (
+              <Grid item xs={12} key={comment.id}>
+                <CommentCard comment={comment} deleteHandler={deleteHandler} />
+              </Grid>
+            ))}
+            <Button
+              variant="contained"
+              sx={{ ml: 2, mt: 2 }}
+              onClick={() => {
+                setCommentsList(toggle ? comments : comments.slice(0, 3));
+                setToggle((prev) => !prev);
+              }}
+            >
             {!toggle ? 'Less...' : 'More...'}
           </Button>
           <Typography variant="body1" color="text.primary"></Typography>

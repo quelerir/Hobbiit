@@ -58,7 +58,7 @@ export default function TreadPage({ darkMode, toggleDarkMode }: Props): JSX.Elem
   useEffect(() => {
     dispatch(getTreadThunk(Number(id)));
   }, []);
-  
+
   useEffect(() => {
     dispatch(getSubscribersThunk(id));
   }, []);
@@ -126,13 +126,13 @@ export default function TreadPage({ darkMode, toggleDarkMode }: Props): JSX.Elem
               </CardActions>
             </Card>
             <AddNewCard />
-            <List>
-              {posts?.map((post) => (
-                <ListItem key={post.id} >
-                  <PostCard post={post} />
-                </ListItem>
-              ))}
-            </List>
+            {/* <List> */}
+            {posts?.map((post) => (
+              // <ListItem key={post.id} >
+              <PostCard post={post} key={post.id} />
+              // </ListItem>
+            ))}
+            {/* </List> */}
           </Grid>
           <Grid item xs={4}>
             <FriendsList />

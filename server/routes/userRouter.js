@@ -53,7 +53,6 @@ userRouter.post('/login', async (req, res) => {
       if (!(await bcrypt.compare(password, user.password))) {
         return res.sendStatus(401);
       }
-
       const sessionUser = JSON.parse(JSON.stringify(user));
       delete sessionUser.password;
       req.session.user = sessionUser;

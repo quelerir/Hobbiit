@@ -55,12 +55,14 @@ postsRouter.patch('/:id', async (req, res) => {
 
 postsRouter.delete('/:id', async (req, res) => {
   try {
-    const post = await Post.findOne({
-      where: { id: req.params.id },
-    });
-    await post.destroy();
+    // const post = await Post.findOne({
+    //   where: { id: req.params.id },
+    // });
+    // await post.destroy();
+    await Post.destroy({ where: { id: req.params.id } });
     return res.sendStatus(200);
   } catch (err) {
+    console.log(err);
     return res.sendStatus(500);
   }
 });
