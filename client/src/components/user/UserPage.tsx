@@ -91,9 +91,9 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
 
   return (
     <div>
-      <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-      <Container maxWidth="lg" sx={{ mt: 5 }}>
-        <Grid container spacing={2}>
+      <Navbar  darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+      <Container maxWidth="lg" sx={{ mt: 10 }}>
+        <Grid  container spacing={2}>
           <Grid item xs={8}>
             {isEdit ? (
               <Card sx={{ minWidth: 275, maxWidth: 775 }}>
@@ -197,7 +197,7 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
               )
             )}
           </Grid>
-          <Grid item xs={4}>
+          <Grid style={{ position: 'fixed', minWidth: '0px', right: 150 }} item xs={4}>
             <FriendsList />
             <TreadList />
           </Grid>

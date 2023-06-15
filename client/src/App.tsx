@@ -68,7 +68,7 @@ function App(): JSX.Element {
             <Route
               path="/signup"
               element={
-                <ProtectedRoute redirect="/user/:id" isAllowed={!user.id}>
+                <ProtectedRoute redirect={`/user/${user.id}`} isAllowed={!user.id}>
                   <SignupPage />
                 </ProtectedRoute>
               }
