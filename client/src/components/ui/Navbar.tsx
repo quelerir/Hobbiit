@@ -167,7 +167,11 @@ export default function Navbar({ darkMode, toggleDarkMode }: Props) {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar sx={{ backgroundColor: '#155445' }} position="static">
+      <AppBar
+        style={{ position: 'fixed', top: 0, zIndex: '2' }}
+        sx={{ backgroundColor: '#155445' }}
+        position="static"
+      >
         <Toolbar>
           <Typography
             variant="h6"

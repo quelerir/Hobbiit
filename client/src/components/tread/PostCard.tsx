@@ -45,7 +45,6 @@ export default function PostCard({ post }: Props) {
   }, []);
 
   // useEffect(() => {
-  //   console.log('ты что творишь?');
   //   setCommentsList(!toggle ? comments : comments.slice(0, 3));
   // }, [comments]);
 

@@ -49,7 +49,13 @@ function CommentCard({ comment, deleteHandler }: Props) {
         <Grid item>
           {isEdit ? (
             <input
-              style={{ marginTop: '0.5rem' }}
+              style={{
+                marginTop: '0.5rem',
+                width: '400px',
+                marginLeft: '5px',
+                height: '40px',
+                wordWrap: 'break-word',
+              }}
               type="text"
               name="commentbody"
               value={input.commentbody}
@@ -59,40 +65,67 @@ function CommentCard({ comment, deleteHandler }: Props) {
             <Typography
               color="white"
               sx={{
-                marginTop: '50px',
-                marginLeft: '-30px',
+                marginTop: '15px',
+                marginLeft: '10px',
                 fontSize: '11px',
                 width: '400px',
+                height: '100px',
                 wordWrap: 'break-word',
+                overflow: 'auto',
               }}
             >
               {comment.commentbody}
             </Typography>
           )}
-          <Typography
-            color="text.secondary"
-            sx={{ position: 'absolute', marginTop: '20px', fontSize: '13px' }}
-          >
-            {comment.User?.firstname} {comment.User?.lastname?.slice(0, 1)}.
-          </Typography>
+          {!isEdit && (
+            <Typography
+              color="text.secondary"
+              sx={{
+                position: 'absolute',
+                marginTop: '-20px',
+                marginLeft: '450px',
+                zIndex: 1,
+                fontSize: '13px',
+                color: 'white',
+              }}
+            >
+              {comment.User?.firstname} {comment.User?.lastname?.slice(0, 1)}.
+            </Typography>
+          )}
         </Grid>
-        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Grid item sx={{ position: 'absolute', zIndex: 1, marginLeft: '450px' }}>
           {user.id === comment.user_id &&
             (isEdit ? (
               <>
-                <Button color="info" onClick={(e) => editHandler(e)}>
+                <Button
+                  style={{ marginTop: '0.5rem' }}
+                  color="info"
+                  onClick={(e) => editHandler(e)}
+                >
                   <SaveIcon />
                 </Button>
-                <Button onClick={() => setEdit(false)} color="warning">
+                <Button
+                  style={{ marginTop: '0.5rem' }}
+                  onClick={() => setEdit(false)}
+                  color="warning"
+                >
                   <CancelIcon />
                 </Button>
               </>
             ) : (
               <>
-                <Button onClick={() => setEdit(true)} color="success">
+                <Button
+                  style={{ marginTop: '0.5rem' }}
+                  onClick={() => setEdit(true)}
+                  color="success"
+                >
                   <BorderColorIcon />
                 </Button>
-                <Button color="error" onClick={() => deleteHandler(comment.id, false)}>
+                <Button
+                  style={{ marginTop: '0.5rem' }}
+                  color="error"
+                  onClick={() => deleteHandler(comment.id, false)}
+                >
                   <DeleteForeverIcon />
                 </Button>
               </>

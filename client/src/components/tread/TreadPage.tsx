@@ -77,7 +77,7 @@ export default function TreadPage({ darkMode, toggleDarkMode }: Props): JSX.Elem
   return (
     <div>
       <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-      <Container maxWidth="lg" sx={{ mt: 5 }}>
+      <Container maxWidth="lg" sx={{ mt: 10 }}>
         <Grid container spacing={2}>
           <Grid item xs={8}>
             <Card sx={{ maxWidth: '345' }}>
@@ -142,7 +142,7 @@ export default function TreadPage({ darkMode, toggleDarkMode }: Props): JSX.Elem
             ))}
             {/* </List> */}
           </Grid>
-          <Grid item xs={4}>
+          <Grid style={{ position: 'fixed', marginLeft: '54%' }} item xs={4}>
             <FriendsList />
             <TreadList />
           </Grid>
