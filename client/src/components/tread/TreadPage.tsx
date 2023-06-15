@@ -100,12 +100,22 @@ export default function TreadPage({ darkMode, toggleDarkMode }: Props): JSX.Elem
               </CardActionArea>
               <CardActions>
                 {!isSubscribed && (
-                  <Button size="small" color="primary" onClick={subscribeHandler}>
+                  <Button
+                    style={{ color: '#3E7065' }}
+                    size="small"
+                    color="primary"
+                    onClick={subscribeHandler}
+                  >
                     Subscribe
                   </Button>
                 )}
                 {isSubscribed && (
-                  <Button size="small" color="secondary" onClick={unfollowHandler}>
+                  <Button
+                    style={{ color: '#999' }}
+                    size="small"
+                    color="secondary"
+                    onClick={unfollowHandler}
+                  >
                     Unfollow
                   </Button>
                 )}
@@ -114,7 +124,7 @@ export default function TreadPage({ darkMode, toggleDarkMode }: Props): JSX.Elem
                     return (
                       <Link to={`/user/${user.id}`}>
                         <Avatar
-                          style={{ height: '32px', width: '32px' }}
+                          style={{ height: '32px', width: '32px', boxShadow: '#2F6355 1px 0px 10px ' }}
                           key={user.id}
                           alt="https://t3.ftcdn.net/jpg/02/09/37/00/360_F_209370065_JLXhrc5inEmGl52SyvSPeVB23hB6IjrR.jpg"
                           src={`${user.avatar}`}

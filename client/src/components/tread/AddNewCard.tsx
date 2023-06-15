@@ -46,6 +46,7 @@ export default function AddNewCard() {
       autoComplete="off"
     >
       <TextField
+        style={{ width: '500px' }}
         value={input.posttitle}
         onChange={handleChange}
         name="posttitle"
@@ -54,6 +55,7 @@ export default function AddNewCard() {
         multiline
       />
       <TextField
+        style={{ width: '500px' }}
         value={input.postbody}
         onChange={handleChange}
         name="postbody"
@@ -61,7 +63,13 @@ export default function AddNewCard() {
         label="Body"
         multiline
       />
-      <TextField name="postimg" type="file" onChange={handleFileChange} accept="image/*" />
+      <TextField
+        style={{ width: '500px' }}
+        name="postimg"
+        type="file"
+        onChange={handleFileChange}
+        accept="image/*"
+      />
       <br />
       <Button sx={{ mt: 2 }} variant="contained" color="success" size="large" type="submit">
         Add new post
