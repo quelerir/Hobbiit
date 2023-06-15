@@ -32,6 +32,30 @@ export default function AboutPage() {
     <ThemeProvider theme={defaultTheme}>
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
+        <span
+          style={{
+            position: 'absolute',
+            color: 'white',
+            top: '50%',
+            left: '25%',
+            fontSize: '3rem',
+            textShadow: 'white  1px 0 9px',
+          }}
+        >
+          HobbyIt
+        </span>
+        <span
+          style={{
+            position: 'absolute',
+            color: 'white',
+            top: '60%',
+            left: '23%',
+            fontSize: '1rem',
+            opacity: '0.5',
+          }}
+        >
+          Your easy way to start new hobby
+        </span>
         <Grid
           item
           xs={false}

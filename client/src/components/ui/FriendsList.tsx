@@ -70,7 +70,7 @@ function FriendsList() {
                     }`}
                   />
                   <Button
-                    endIcon={<ChatIcon />}
+                    endIcon={<ChatIcon style={{ color: '#155445' }} />}
                     onClick={() => handleOpenDialog(friend.id)}
                     style={{ height: '44px' }}
                   ></Button>

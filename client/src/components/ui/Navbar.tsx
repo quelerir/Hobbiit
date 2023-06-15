@@ -138,7 +138,7 @@ export default function Navbar({ darkMode, toggleDarkMode }: Props) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <Link to={`/user/${user.id}`}>
+      <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`/user/${user.id}`}>
         <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       </Link>
 
@@ -167,7 +167,7 @@ export default function Navbar({ darkMode, toggleDarkMode }: Props) {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar sx={{ backgroundColor: '#155445' }} position="static">
         <Toolbar>
           <Typography
             variant="h6"
@@ -177,7 +177,6 @@ export default function Navbar({ darkMode, toggleDarkMode }: Props) {
               display: { xs: 'none', sm: 'block' },
               fontFamily: 'Alana Pro RUS, sans-serif',
               fontSize: '28px',
-              marginTop: '17px',
             }}
           >
             HobbyIt
@@ -201,15 +200,23 @@ export default function Navbar({ darkMode, toggleDarkMode }: Props) {
               sx={{
                 width: '100%',
                 maxWidth: 300,
-                bgcolor: '#999',
+                bgcolor: '#3E7065',
                 position: 'absolute',
                 top: '64px',
                 left: '145px',
-                zIndex: '1',
+                zIndex: '2',
               }}
             >
               {searchUserResult.length !== 0 && (
-                <span style={{ justifyContent: 'center', display: 'flex', color: '#555' }}>
+                <span
+                  style={{
+                    justifyContent: 'center',
+                    display: 'flex',
+                    color: 'white',
+                    opacity: '0.7',
+                    fontSize: '18px',
+                  }}
+                >
                   User
                 </span>
               )}
@@ -217,7 +224,15 @@ export default function Navbar({ darkMode, toggleDarkMode }: Props) {
                 <OneSearchUser key={user.id} user={user} />
               ))}
               {searchTreadResult.length !== 0 && (
-                <span style={{ justifyContent: 'center', display: 'flex', color: '#555' }}>
+                <span
+                  style={{
+                    justifyContent: 'center',
+                    display: 'flex',
+                    color: 'white',
+                    opacity: '0.7',
+                    fontSize: '18px',
+                  }}
+                >
                   Treads
                 </span>
               )}

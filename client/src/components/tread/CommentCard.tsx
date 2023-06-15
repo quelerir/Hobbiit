@@ -15,7 +15,6 @@ type Props = {
 };
 
 function CommentCard({ comment, deleteHandler }: Props) {
-
   const [isEdit, setEdit] = useState(false);
 
   const [input, setInput] = useState<CommentFormType>({
@@ -36,14 +35,18 @@ function CommentCard({ comment, deleteHandler }: Props) {
   };
 
   return (
-    <Card sx={{ mt: 1, backgroundColor: 'lightskyblue' }}>
+    <Card sx={{ mt: 1, backgroundColor: '#3E7065', height: '120px' }}>
       <Grid container spacing={2}>
-        <Grid item xs={2}>
+        <Grid item xs={1}>
           <Link to={`/user/${comment.User?.id}`}>
-            <Avatar sx={{ mt: 1.5, ml: 2 }} alt="user photo" src={`${comment.User?.avatar}`} />
+            <Avatar
+              sx={{ mt: 1, ml: 1, boxShadow: 'white 0px 0px 57px' }}
+              alt="user photo"
+              src={`${comment.User?.avatar}`}
+            />
           </Link>
         </Grid>
-        <Grid item xs={8}>
+        <Grid item>
           {isEdit ? (
             <input
               style={{ marginTop: '0.5rem' }}
@@ -53,34 +56,44 @@ function CommentCard({ comment, deleteHandler }: Props) {
               onChange={handleChange}
             />
           ) : (
-            <Typography color="primary" sx={{ fontWeight: 'bold', mt: 1 }}>
+            <Typography
+              color="white"
+              sx={{
+                marginTop: '50px',
+                marginLeft: '-30px',
+                fontSize: '11px',
+                width: '400px',
+                wordWrap: 'break-word',
+              }}
+            >
               {comment.commentbody}
             </Typography>
           )}
-          <Typography color="text.secondary" sx={{ mt: 1 }}>
-            Posted by {comment.User?.firstname} {comment.User?.lastname?.slice(0, 1)}.
+          <Typography color="text.secondary" sx={{ position: marginTop: '20px', fontSize: '13px' }}>
+            {comment.User?.firstname} {comment.User?.lastname?.slice(0, 1)}.
           </Typography>
         </Grid>
         <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          {(user.id === comment.user_id) && (isEdit ? (
-            <>
-              <Button color="info" onClick={(e) => editHandler(e)}>
-                <SaveIcon />
-              </Button>
-              <Button onClick={() => setEdit(false)} color="warning">
-                <CancelIcon />
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button onClick={() => setEdit(true)} color="success">
-                <BorderColorIcon />
-              </Button>
-              <Button color="error" onClick={() => deleteHandler(comment.id, false)}>
-                <DeleteForeverIcon />
-              </Button>
-            </>
-          ))}
+          {user.id === comment.user_id &&
+            (isEdit ? (
+              <>
+                <Button color="info" onClick={(e) => editHandler(e)}>
+                  <SaveIcon />
+                </Button>
+                <Button onClick={() => setEdit(false)} color="warning">
+                  <CancelIcon />
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button onClick={() => setEdit(true)} color="success">
+                  <BorderColorIcon />
+                </Button>
+                <Button color="error" onClick={() => deleteHandler(comment.id, false)}>
+                  <DeleteForeverIcon />
+                </Button>
+              </>
+            ))}
         </Grid>
       </Grid>
     </Card>
