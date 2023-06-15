@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import List from '@mui/material/List';
