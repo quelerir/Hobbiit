@@ -1,5 +1,17 @@
 const express = require('express');
+const multer = require('multer');
 const { Post, User, Like } = require('../db/models');
+
+const storage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, '../client/public/photo'); // Измените путь к папке, где вы хотите сохранить фото
+  },
+  filename(req, file, cb) {
+    cb(null, file.originalname); // Сохраняйте файл с его исходным именем
+  },
+});
+
+const upload = multer({ storage });
 
 const postsRouter = express.Router();
 
@@ -16,24 +28,25 @@ postsRouter.get('/:treadId', async (req, res) => {
   }
 });
 
-postsRouter.post('/:treadId', async (req, res) => {
+postsRouter.post('/:treadId', upload.single('avatar'), async (req, res) => {
   try {
     const { treadId } = req.params;
-    const { posttitle, postbody, postimg } = req.body;
+    const { posttitle, postbody } = req.body;
     const userId = req.session.user.id;
     const newPost = await Post.create({
       tread_id: treadId,
       user_id: userId,
       posttitle,
       postbody,
-      postimg,
+      postimg: `../photo/${req.file.originalname}`,
     });
     const post = await Post.findOne({
       where: { id: newPost.id },
       include: { model: User },
     });
     return res.json(post);
-  } catch {
+  } catch (err) {
+    console.log(err);
     return res.sendStatus(500);
   }
 });

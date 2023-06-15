@@ -1,7 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const multer = require('multer');
-const path = require('path');
 const { User, Tread } = require('../db/models');
 
 const storage = multer.diskStorage({

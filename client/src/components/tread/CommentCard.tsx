@@ -15,7 +15,6 @@ type Props = {
 };
 
 function CommentCard({ comment, deleteHandler }: Props) {
-
   const [isEdit, setEdit] = useState(false);
 
   const [input, setInput] = useState<CommentFormType>({
@@ -36,51 +35,101 @@ function CommentCard({ comment, deleteHandler }: Props) {
   };
 
   return (
-    <Card sx={{ mt: 1, backgroundColor: 'lightskyblue' }}>
+    <Card sx={{ mt: 1, backgroundColor: '#3E7065', height: '120px' }}>
       <Grid container spacing={2}>
-        <Grid item xs={2}>
+        <Grid item xs={1}>
           <Link to={`/user/${comment.User?.id}`}>
-            <Avatar sx={{ mt: 1.5, ml: 2 }} alt="user photo" src={`${comment.User?.avatar}`} />
+            <Avatar
+              sx={{ mt: 1, ml: 1, boxShadow: 'white 0px 0px 57px' }}
+              alt="user photo"
+              src={`${comment.User?.avatar}`}
+            />
           </Link>
         </Grid>
-        <Grid item xs={8}>
+        <Grid item>
           {isEdit ? (
             <input
-              style={{ marginTop: '0.5rem' }}
+              style={{
+                marginTop: '0.5rem',
+                width: '400px',
+                marginLeft: '5px',
+                height: '40px',
+                wordWrap: 'break-word',
+              }}
               type="text"
               name="commentbody"
               value={input.commentbody}
               onChange={handleChange}
             />
           ) : (
-            <Typography color="primary" sx={{ fontWeight: 'bold', mt: 1 }}>
+            <Typography
+              color="white"
+              sx={{
+                marginTop: '15px',
+                marginLeft: '10px',
+                fontSize: '11px',
+                width: '400px',
+                height: '100px',
+                wordWrap: 'break-word',
+                overflow: 'auto',
+              }}
+            >
               {comment.commentbody}
             </Typography>
           )}
-          <Typography color="text.secondary" sx={{ mt: 1 }}>
-            Posted by {comment.User?.firstname} {comment.User?.lastname?.slice(0, 1)}.
-          </Typography>
+          {!isEdit && (
+            <Typography
+              color="text.secondary"
+              sx={{
+                position: 'absolute',
+                marginTop: '-20px',
+                marginLeft: '450px',
+                zIndex: 1,
+                fontSize: '13px',
+                color: 'white',
+              }}
+            >
+              {comment.User?.firstname} {comment.User?.lastname?.slice(0, 1)}.
+            </Typography>
+          )}
         </Grid>
-        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          {(user.id === comment.user_id) && (isEdit ? (
-            <>
-              <Button color="info" onClick={(e) => editHandler(e)}>
-                <SaveIcon />
-              </Button>
-              <Button onClick={() => setEdit(false)} color="warning">
-                <CancelIcon />
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button onClick={() => setEdit(true)} color="success">
-                <BorderColorIcon />
-              </Button>
-              <Button color="error" onClick={() => deleteHandler(comment.id, false)}>
-                <DeleteForeverIcon />
-              </Button>
-            </>
-          ))}
+        <Grid item sx={{ position: 'absolute', zIndex: 1, marginLeft: '450px' }}>
+          {user.id === comment.user_id &&
+            (isEdit ? (
+              <>
+                <Button
+                  style={{ marginTop: '0.5rem' }}
+                  color="info"
+                  onClick={(e) => editHandler(e)}
+                >
+                  <SaveIcon />
+                </Button>
+                <Button
+                  style={{ marginTop: '0.5rem' }}
+                  onClick={() => setEdit(false)}
+                  color="warning"
+                >
+                  <CancelIcon />
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  style={{ marginTop: '0.5rem' }}
+                  onClick={() => setEdit(true)}
+                  color="success"
+                >
+                  <BorderColorIcon />
+                </Button>
+                <Button
+                  style={{ marginTop: '0.5rem' }}
+                  color="error"
+                  onClick={() => deleteHandler(comment.id, false)}
+                >
+                  <DeleteForeverIcon />
+                </Button>
+              </>
+            ))}
         </Grid>
       </Grid>
     </Card>

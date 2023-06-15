@@ -42,7 +42,6 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
   const [isEdit, setIsEdit] = useState(true);
 
-
   const handleClick = (status: string): void => {
     dispatch({ type: UPDATE_STATUS, payload: { status } });
   };
@@ -92,9 +91,9 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
 
   return (
     <div>
-      <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-      <Container maxWidth="lg" sx={{ mt: 5 }}>
-        <Grid container spacing={2}>
+      <Navbar  darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+      <Container maxWidth="lg" sx={{ mt: 10 }}>
+        <Grid  container spacing={2}>
           <Grid item xs={8}>
             {isEdit ? (
               <Card sx={{ minWidth: 275, maxWidth: 775 }}>
@@ -103,7 +102,7 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
                     onClick={(e: React.MouseEvent<HTMLDivElement>) => setAnchorEl(e.currentTarget)}
                     alt="Remy Sharp"
                     src={`${currentUser?.avatar}`}
-                    sx={{ width: 56, height: 56 }}
+                    sx={{ width: 70, height: 70 }}
                   />
                   <Popover
                     id="avatarPopover"
@@ -150,21 +149,43 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
                       )))}
 
                   <Typography variant="h5" component="div"></Typography>
-                  <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                  <Typography style={{ fontSize: '16px' }} sx={{ mb: 1.5 }} color="text.secondary">
                     Location: {currentUser?.location}
                   </Typography>
-                  <Typography variant="body2">About: {currentUser?.about}</Typography>
+                  <Typography style={{ fontSize: '13px' }} variant="body2">
+                    About: {currentUser?.about}
+                  </Typography>
                   {userSelector?.id === currentUser?.id && (
                     <CardActions>
                       {openAddPhoto ? (
-                        <AddAPhotoIcon onClick={() => setOprAddPhoto(false)} />
+                        <AddAPhotoIcon
+                          style={{
+                            cursor: 'pointer',
+                            position: 'relative',
+                            zIndex: '1',
+                            top: '-137px',
+                            left: '60px',
+                          }}
+                          onClick={() => setOprAddPhoto(false)}
+                        />
                       ) : (
                         <>
-                          <SaveAltIcon onClick={photoEditHandler} />
+                          <SaveAltIcon
+                            style={{
+                              cursor: 'pointer',
+                              position: 'relative',
+                              zIndex: '0',
+                              top: '-137px',
+                              left: '60px',
+                            }}
+                            onClick={photoEditHandler}
+                          />
                           <input accept="image/*" type="file" onChange={handleFileChange} />
                         </>
                       )}
-                      <Button onClick={() => setIsEdit(false)}>Edit profile</Button>
+                      <Button style={{ color: '#3E7065' }} onClick={() => setIsEdit(false)}>
+                        Edit profile
+                      </Button>
                       <DeleteUserModal />
                     </CardActions>
                   )}
@@ -176,7 +197,7 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
               )
             )}
           </Grid>
-          <Grid item xs={4}>
+          <Grid style={{ position: 'fixed', minWidth: '0px', right: 150 }} item xs={4}>
             <FriendsList />
             <TreadList />
           </Grid>

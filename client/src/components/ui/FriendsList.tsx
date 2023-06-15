@@ -41,7 +41,7 @@ function FriendsList() {
   }, [userSelector?.id]);
 
   return (
-    <Card sx={{ minWidth: 375, maxWidth: 375, height: '85vh' }}>
+    <Card sx={{ minWidth: 375, maxWidth: 375, height: '40vh', overflow: 'auto' }}>
       <CardContent>
         <Typography sx={{ fontSize: 18, fontWeight: 'bold', textTransform: 'uppercase' }}>
           Friends
@@ -70,7 +70,7 @@ function FriendsList() {
                     }`}
                   />
                   <Button
-                    endIcon={<ChatIcon />}
+                    endIcon={<ChatIcon style={{ color: '#155445' }} />}
                     onClick={() => handleOpenDialog(friend.id)}
                     style={{ height: '44px' }}
                   ></Button>
