@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useCallback, useEffect, useState } from 'react';
 import { PostType } from '../../types/PostTypes';
 import {
@@ -24,7 +25,7 @@ import SendIcon from '@mui/icons-material/Send';
 import EditPostModal from './EditPostModal';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { deletePostThunk } from '../../redux/slices/postsSlice';
-import { SEND_LIKE } from '../../types/wsTypes';
+import { SEND_COMMENT, SEND_LIKE } from '../../types/wsTypes';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 type Props = {
@@ -55,7 +56,9 @@ export default function PostCard({ post }: Props) {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    dispatch(addCommentThunk(input, post.id));
+
+    dispatch({ type: SEND_COMMENT, payload: { postId: post.id, input } });
+    // dispatch(addCommentThunk(input, post.id));
     setInput({ commentbody: '' });
   };
 
@@ -72,7 +75,6 @@ export default function PostCard({ post }: Props) {
   const likeHandler = () => {
     dispatch({ type: SEND_LIKE, payload: { postId: post.id } });
   };
-
   return (
     <Container maxWidth="lg" sx={{ mt: 5 }}>
       <Card sx={{ mt: 2 }}>
@@ -113,7 +115,7 @@ export default function PostCard({ post }: Props) {
             style={{
               position: 'relative',
               marginLeft: '645px',
-              marginTop: '-240px',
+              marginTop: '-50px',
               color: 'white',
             }}
           >

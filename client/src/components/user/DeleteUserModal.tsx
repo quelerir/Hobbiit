@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Box, Button, Modal } from '@mui/material';
 import React, { useState } from 'react';
 import { deleteUserThunk } from '../../redux/slices/userSlice';

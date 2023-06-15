@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from 'react';
 import { useAppDispatch } from '../../redux/hooks';
 import { Box, Button, TextField } from '@mui/material';
@@ -14,7 +15,7 @@ export default function EditUserForm({ user, setIsEdit }: Props): JSX.Element {
   const params = useParams();
 
   const id = params.id;
-  
+
   const [input, setInput] = useState<UserEditType>({
     firstname: user.firstname,
     lastname: user.lastname,

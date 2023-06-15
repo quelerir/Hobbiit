@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from 'react';
 import { useAppDispatch } from '../../redux/hooks';
 import { editPostThunk } from '../../redux/slices/postsSlice';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import { debounce } from 'lodash';
 import { styled, alpha } from '@mui/material/styles';

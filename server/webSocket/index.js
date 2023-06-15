@@ -1,5 +1,5 @@
 const { WebSocketServer } = require('ws');
-const { Messages, User, Like, Post } = require('../db/models');
+const { Messages, User, Like, Post, Comment } = require('../db/models');
 
 const wss = new WebSocketServer({ clientTracking: false, noServer: true });
 
@@ -47,7 +47,6 @@ wss.on('connection', (ws, request, wsMap) => {
             objectchatuser_id: recipient.id,
             message,
           });
-
           // Отправить новое сообщение отправителю
           ws.send(
             JSON.stringify({
@@ -96,7 +95,37 @@ wss.on('connection', (ws, request, wsMap) => {
         }
         break;
       }
+      case 'SEND_POST': {
+        const onePost = await Post.findAll({ where: { tread_id: payload }, include: [Like] });
+        const sort = onePost.sort((a, b) => b.createdAt - a.createdAt);
+        const payloadTo = {
+          type: 'post/setPosts',
+          payload: sort,
+        };
 
+        for (const [, wsClient] of wsMap) {
+          wsClient.ws.send(JSON.stringify(payloadTo));
+        }
+        break;
+      }
+      case 'SEND_COMMENT': {
+        const { postId } = payload;
+        const { commentbody } = payload.input;
+        const comment = await Comment.create({ post_id: postId, user_id: id, commentbody });
+        const newComment = await Comment.findOne({
+          where: { id: comment.id },
+          include: { model: User },
+        });
+        const payloadTo = {
+          type: 'comment/addComment',
+          payload: newComment,
+        };
+
+        for (const [, wsClient] of wsMap) {
+          wsClient.ws.send(JSON.stringify(payloadTo));
+        }
+        break;
+      }
       default:
         break;
     }

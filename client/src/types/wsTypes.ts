@@ -1,5 +1,3 @@
-import { type } from 'os';
-
 export const SOCKET_INIT = 'SOCKET_INIT';
 export type WsInitType = {
   type: typeof SOCKET_INIT;
@@ -30,10 +28,22 @@ export type WsSendLikeType = {
   type: typeof SEND_LIKE;
 };
 
+export const SEND_POST = 'SEND_POST';
+export type WsSendPostType = {
+  type: typeof SEND_POST;
+};
+
+export const SEND_COMMENT = 'SEND_COMMENT';
+export type WsSendCommentType = {
+  type: typeof SEND_COMMENT;
+};
+
 export type WsActionTypes =
   | WsInitType
   | WsConnectType
   | WsUpdateStatusType
   | WsCloseType
   | WsSendMessageType
-  | WsSendLikeType;
+  | WsSendLikeType
+  | WsSendPostType
+  | WsSendCommentType;

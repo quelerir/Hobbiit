@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from 'react';
 import { CommentFormType, CommentType } from '../../types/CommentTypes';
 import { Avatar, Button, Card, Grid, Typography } from '@mui/material';

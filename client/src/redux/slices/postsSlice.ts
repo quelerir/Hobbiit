@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
@@ -39,10 +40,9 @@ export const addPostThunk =
     const formData = new FormData();
     formData.append('avatar', avatar);
     formData.append('posttitle', input.posttitle);
-    formData.append('postbody', input.postbody)
+    formData.append('postbody', input.postbody);
     axios
       .post<PostType>(`/api/posts/${treadId}`, formData)
-      .then(({ data }) => dispatch(addPost(data)))
       .catch(console.log);
   };
 

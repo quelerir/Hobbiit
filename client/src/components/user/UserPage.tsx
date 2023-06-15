@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useEffect, useState } from 'react';
 import Navbar from '../ui/Navbar';
 import {
@@ -21,11 +22,11 @@ import FriendsList from '../ui/FriendsList';
 import TreadList from '../ui/TreadList';
 import emojis from '../utils/emojis';
 import { useParams } from 'react-router-dom';
-import { UPDATE_STATUS } from '../../types/wsTypes';
 import { addEditPhotoThunk, setCurrentUserThunk } from '../../redux/slices/currentUserSlice';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { addFriendThunk, deleteFriendThunk } from '../../redux/slices/friendsSlice';
+import { UPDATE_STATUS } from '../../types/wsTypes';
 
 type Props = {
   darkMode: boolean;
@@ -91,9 +92,9 @@ export default function UserPage({ darkMode, toggleDarkMode }: Props): JSX.Eleme
 
   return (
     <div>
-      <Navbar  darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+      <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
       <Container maxWidth="lg" sx={{ mt: 10 }}>
-        <Grid  container spacing={2}>
+        <Grid container spacing={2}>
           <Grid item xs={8}>
             {isEdit ? (
               <Card sx={{ minWidth: 275, maxWidth: 775 }}>
