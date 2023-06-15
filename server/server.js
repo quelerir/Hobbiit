@@ -1,10 +1,10 @@
 const express = require('express');
-const morgan = require('morgan');
 const cors = require('cors');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const FileStore = require('session-file-store')(session);
 const http = require('http');
+const path = require('path');
 const userRouter = require('./routes/userRouter');
 
 const wss = require('./webSocket');
@@ -23,7 +23,6 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(cors({ credentials: true, origin: true }));
-app.use(morgan('dev'));
 
 const sessionParser = session({
   name: 'sid_socket',
@@ -43,6 +42,7 @@ app.use(sessionParser);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
 app.use('/api/user', userRouter);
 app.use('/api/friends', friendsRouter);
 app.use('/api/tread', treadsRouter);
@@ -52,6 +52,10 @@ app.use('/api/subscribe', subscribeRouter);
 app.use('/api/currentUser', currentUserRouter);
 app.use('/api/chat', chatRouter);
 app.use('/api/search', searchRouter);
+
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'));
+});
 
 const server = http.createServer(app);
 

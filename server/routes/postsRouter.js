@@ -42,7 +42,7 @@ postsRouter.post('/:treadId', upload.single('avatar'), async (req, res) => {
     });
     const post = await Post.findOne({
       where: { id: newPost.id },
-      include: { model: User },
+      include: [{ model: User }, { model: Like }],
     });
     return res.json(post);
   } catch (err) {
@@ -58,7 +58,7 @@ postsRouter.patch('/:id', async (req, res) => {
     await Post.update({ posttitle, postbody, postimg }, { where: { id } });
     const post = await Post.findOne({
       where: { id },
-      include: { model: User },
+      include: [{ model: User }, { model: Like }],
     });
     return res.json(post);
   } catch {

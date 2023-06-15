@@ -3,8 +3,10 @@ import { take, put, call, takeEvery, fork } from 'redux-saga/effects';
 import type { EventChannel } from 'redux-saga';
 import { eventChannel, END } from 'redux-saga';
 import {
+  SEND_COMMENT,
   SEND_LIKE,
   SEND_MESSAGE,
+  SEND_POST,
   SOCKET_CLOSE,
   SOCKET_CONNECT,
   SOCKET_INIT,
@@ -59,6 +61,20 @@ function* sendLike(socket: WebSocket): Generator {
   }
 }
 
+function* sendPost(socket: WebSocket): Generator {
+  while (true) {
+    const message = yield take(SEND_POST);
+    socket.send(JSON.stringify(message));
+  }
+}
+
+function* sendComment(socket: WebSocket): Generator {
+  while (true) {
+    const message = yield take(SEND_COMMENT);
+    socket.send(JSON.stringify(message));
+  }
+}
+
 function* friendsListWorker(): Generator<unknown, void, WsActionTypes> {
   const socket = new WebSocket(import.meta.env.VITE_WS_URL);
   const socketChannel = yield call(createSocketChannel, socket);
@@ -66,6 +82,8 @@ function* friendsListWorker(): Generator<unknown, void, WsActionTypes> {
   yield fork(updateStatus, socket);
   yield fork(sendMassage, socket);
   yield fork(sendLike, socket);
+  yield fork(sendPost, socket);
+  yield fork(sendComment, socket);
 
   while (true) {
     try {
