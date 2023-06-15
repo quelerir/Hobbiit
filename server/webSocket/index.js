@@ -1,14 +1,11 @@
 const { WebSocketServer } = require('ws');
-const { User } = require('../db/models');
+const { Messages, User, Like, Post } = require('../db/models');
 
 const wss = new WebSocketServer({ clientTracking: false, noServer: true });
 
 wss.on('connection', (ws, request, wsMap) => {
   const { id } = request.session.user;
   wsMap.set(id, { ws, user: request.session.user });
-
-  console.log({wsMap})
-
   for (const [, wsClient] of wsMap) {
     wsClient.ws.send(
       JSON.stringify({
@@ -37,6 +34,69 @@ wss.on('connection', (ws, request, wsMap) => {
         }
         break;
       }
+      case 'SEND_MESSAGE': {
+        const { recipientId, message } = payload;
+        const sender = await User.findByPk(id);
+        const recipient = await User.findByPk(recipientId);
+        if (!message) {
+          return;
+        }
+        if (sender && recipient) {
+          const newMessage = await Messages.create({
+            subjectchatuser_id: sender.id,
+            objectchatuser_id: recipient.id,
+            message,
+          });
+
+          // Отправить новое сообщение отправителю
+          ws.send(
+            JSON.stringify({
+              type: 'UserMessage/addMessage',
+              payload: newMessage,
+            }),
+          );
+
+          const recipientConnection = wsMap.get(recipient.id);
+          if (recipientConnection) {
+            // Отправить новое сообщение получателю
+            recipientConnection.ws.send(
+              JSON.stringify({
+                type: 'UserMessage/addMessage',
+                payload: newMessage,
+              }),
+            );
+          }
+        }
+        break;
+      }
+      case 'SEND_LIKE': {
+        const { postId } = payload;
+        const existingLike = await Like.findOne({ where: { post_id: postId, user_id: id } });
+        if (existingLike) {
+          const onePost = await Post.findByPk(postId);
+          onePost.likecount -= 1;
+          await onePost.save();
+          existingLike.destroy();
+        }
+        if (!existingLike) {
+          await Like.create({ post_id: postId, user_id: id, islike: true });
+          const onePost = await Post.findByPk(postId);
+          onePost.likecount += 1;
+          await onePost.save();
+        }
+        const savePost = await Post.findByPk(postId);
+
+        const payloadToSend = {
+          type: 'post/editPost',
+          payload: savePost,
+        };
+
+        for (const [, wsClient] of wsMap) {
+          wsClient.ws.send(JSON.stringify(payloadToSend));
+        }
+        break;
+      }
+
       default:
         break;
     }

@@ -24,14 +24,17 @@ module.exports = {
           model: 'Posts',
           key: 'id',
         },
+        onDelete: 'cascade',
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
       },
     });
   },

@@ -9,6 +9,8 @@ import { checkUserThunk } from './redux/slices/userSlice';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { SOCKET_INIT } from './types/wsTypes';
+import { CircularProgress } from '@mui/material';
+import ProtectedRoute from './hoc/ProtectedRoute';
 
 function App(): JSX.Element {
   const user = useAppSelector((store) => store.user);
@@ -28,7 +30,7 @@ function App(): JSX.Element {
   }, [darkMode]);
 
   useEffect(() => {
-    if (user.id) {
+    if (!user.id) {
       dispatch({ type: SOCKET_INIT });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -44,22 +46,46 @@ function App(): JSX.Element {
     },
   });
 
+  console.log(user.locationStatus);
+
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Routes>
-          <Route path="/" element={<AboutPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route
-            path="/user/:id"
-            element={<UserPage user={user} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
-          />
-          <Route
-            path="/tread/:id"
-            element={<TreadPage darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
-          />
-        </Routes>
+        {!user?.locationStatus ? (
+          <CircularProgress />
+        ) : (
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute redirect={`/user/${user.id}`} isAllowed={!user.id}>
+                  <AboutPage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/signup"
+              element={
+                <ProtectedRoute redirect={`/user/${user.id}`} isAllowed={!user.id}>
+                  <SignupPage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route element={<ProtectedRoute redirect="/" isAllowed={!!user.id} />}>
+              <Route
+                path="/user/:id"
+                element={<UserPage darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
+              />
+              <Route
+                path="/tread/:id"
+                element={<TreadPage darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
+              />
+            </Route>
+          </Routes>
+        )}
       </ThemeProvider>
     </div>
   );

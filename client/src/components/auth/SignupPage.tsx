@@ -21,6 +21,7 @@ import { useNavigate } from 'react-router-dom';
 const defaultTheme = createTheme();
 
 export default function SignupPage() {
+  const [error, setError] = useState({});
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [input, setInput] = useState<UserSignUpType>({
@@ -32,11 +33,37 @@ export default function SignupPage() {
 
   const changeHandler: React.ChangeEventHandler<HTMLInputElement> = (e): void => {
     setInput((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    if (e.target.value) setError((prev) => ({ ...prev, [e.target.name]: '' }));
   };
+
+  function validatePassword(password) {
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
+    if (!password || password.length < 8 || regex.test(password)) {
+      setError((prev) => ({
+        ...prev,
+        password:
+          'Введите пароль длиннее 8 символов, который содержит прописную, заглавную букву,цифру и специальный символ',
+      }));
+      return false;
+    }
+    return true;
+  }
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    dispatch(signUpThunk(input, navigate));
+    if (!input.firstname) {
+      setError((prev) => ({ ...prev, firstname: 'Введите имя' }));
+    }
+    if (!input.lastname) {
+      setError((prev) => ({ ...prev, lastname: 'Введите фамилию' }));
+    }
+    if (!input.email) {
+      setError((prev) => ({ ...prev, email: 'Введите email' }));
+    }
+    if (validatePassword(input.password) && input.email && input.firstname && input.lastname) {
+      dispatch(signUpThunk(input, navigate));
+    }
   };
 
   return (
@@ -71,6 +98,7 @@ export default function SignupPage() {
                   onChange={changeHandler}
                   value={input.firstname}
                 />
+              {error.firstname && <span>{error.firstname}</span>}
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -82,7 +110,8 @@ export default function SignupPage() {
                   autoComplete="family-name"
                   onChange={changeHandler}
                   value={input.lastname}
-                />
+                  />
+                  {error.lastname && <span>{error.lastname}</span>}
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -95,6 +124,7 @@ export default function SignupPage() {
                   onChange={changeHandler}
                   value={input.email}
                 />
+              {error.email && <span>{error.email}</span>}
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -108,6 +138,7 @@ export default function SignupPage() {
                   onChange={changeHandler}
                   value={input.password}
                 />
+              {error.password && <span>{error.password}</span>}
               </Grid>
             </Grid>
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>

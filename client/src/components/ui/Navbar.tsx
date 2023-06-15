@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { debounce } from 'lodash';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -6,20 +7,21 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
-import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
-import { useAppDispatch } from '../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { logoutThunk } from '../../redux/slices/userSlice';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import '../../../public/fonts.css';
+import { selectSearchThunk } from '../../redux/slices/searchSlice';
+import { List } from '@mui/material';
+import OneSearchUser from './OneSearchUser';
+import OneSearchTread from './OneSearchTread';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -67,6 +69,14 @@ type Props = {
 };
 
 export default function Navbar({ darkMode, toggleDarkMode }: Props) {
+  const [input, setInput] = useState('');
+
+  const user = useAppSelector((state) => state.user);
+
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  }, []);
+
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -74,6 +84,19 @@ export default function Navbar({ darkMode, toggleDarkMode }: Props) {
     handleMenuClose();
     dispatch(logoutThunk(navigate));
   };
+
+  const { searchUserResult = [], searchTreadResult = [] } = useAppSelector((state) => state.search);
+
+  const delayedDispatch = useCallback(
+    debounce((input: string) => {
+      dispatch(selectSearchThunk({ input }));
+    }, 400),
+    [],
+  );
+
+  useEffect(() => {
+    delayedDispatch(input);
+  }, [input, delayedDispatch]);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -115,8 +138,10 @@ export default function Navbar({ darkMode, toggleDarkMode }: Props) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`/user/${user.id}`}>
+        <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      </Link>
+
       <MenuItem onClick={logoutHandler}>Logout</MenuItem>
     </Menu>
   );
@@ -137,56 +162,89 @@ export default function Navbar({ darkMode, toggleDarkMode }: Props) {
       }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton size="large" aria-label="show 17 new notifications" color="inherit">
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
-    </Menu>
+    ></Menu>
   );
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar
+        style={{ position: 'fixed', top: 0, zIndex: '2' }}
+        sx={{ backgroundColor: '#155445' }}
+        position="static"
+      >
         <Toolbar>
           <Typography
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
+            sx={{
+              display: { xs: 'none', sm: 'block' },
+              fontFamily: 'Alana Pro RUS, sans-serif',
+              fontSize: '28px',
+            }}
           >
-            Hobby it
+            HobbyIt
           </Typography>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
-            <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
+            <StyledInputBase
+              value={input}
+              onChange={handleInputChange}
+              name="input"
+              placeholder="Search…"
+              inputProps={{ 'aria-label': 'search' }}
+            />
           </Search>
+          {((input && searchUserResult.length !== 0) ||
+            (input && searchTreadResult.length !== 0)) && (
+            <List
+              dense
+              sx={{
+                width: '100%',
+                maxWidth: 300,
+                bgcolor: '#3E7065',
+                position: 'absolute',
+                top: '64px',
+                left: '145px',
+                zIndex: '2',
+              }}
+            >
+              {searchUserResult.length !== 0 && (
+                <span
+                  style={{
+                    justifyContent: 'center',
+                    display: 'flex',
+                    color: 'white',
+                    opacity: '0.7',
+                    fontSize: '18px',
+                  }}
+                >
+                  User
+                </span>
+              )}
+              {searchUserResult?.map((user) => (
+                <OneSearchUser key={user.id} user={user} />
+              ))}
+              {searchTreadResult.length !== 0 && (
+                <span
+                  style={{
+                    justifyContent: 'center',
+                    display: 'flex',
+                    color: 'white',
+                    opacity: '0.7',
+                    fontSize: '18px',
+                  }}
+                >
+                  Treads
+                </span>
+              )}
+              {searchTreadResult.map((tread) => (
+                <OneSearchTread key={tread.id} tread={tread} />
+              ))}
+            </List>
+          )}
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton
