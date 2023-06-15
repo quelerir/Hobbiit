@@ -10,7 +10,6 @@ import {
   Container,
   Grid,
   Input,
-  TextField,
   Typography,
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
@@ -45,9 +44,10 @@ export default function PostCard({ post }: Props) {
     dispatch(getCommentsThunk());
   }, []);
 
-  useEffect(() => {
-    setCommentsList(!toggle ? comments : comments.slice(0, 3));
-  }, [comments]);
+  // useEffect(() => {
+  //   console.log('ты что творишь?');
+  //   setCommentsList(!toggle ? comments : comments.slice(0, 3));
+  // }, [comments]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -190,7 +190,7 @@ export default function PostCard({ post }: Props) {
             </Grid>
           </Box>
           <Grid container spacing={1} sx={{ mt: 1, display: 'flex', justifyContent: 'center' }}>
-            {commentsList?.map((comment) => (
+            {(!toggle ? comments : comments.slice(0, 3)).map((comment) => (
               <Grid item xs={10} key={comment.id}>
                 <CommentCard comment={comment} deleteHandler={deleteHandler} />
               </Grid>
@@ -200,7 +200,7 @@ export default function PostCard({ post }: Props) {
                 variant="contained"
                 sx={{ ml: 2, mt: 2, borderRadius: 0 }}
                 onClick={() => {
-                  setCommentsList(toggle ? comments : comments.slice(0, 3));
+                  // setCommentsList(toggle ? comments : comments.slice(0, 3));
                   setToggle((prev) => !prev);
                 }}
               >

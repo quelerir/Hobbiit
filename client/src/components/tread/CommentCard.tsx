@@ -69,7 +69,10 @@ function CommentCard({ comment, deleteHandler }: Props) {
               {comment.commentbody}
             </Typography>
           )}
-          <Typography color="text.secondary" sx={{ position: marginTop: '20px', fontSize: '13px' }}>
+          <Typography
+            color="text.secondary"
+            sx={{ position: 'absolute', marginTop: '20px', fontSize: '13px' }}
+          >
             {comment.User?.firstname} {comment.User?.lastname?.slice(0, 1)}.
           </Typography>
         </Grid>

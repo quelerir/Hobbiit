@@ -45,7 +45,8 @@ postsRouter.post('/:treadId', upload.single('avatar'), async (req, res) => {
       include: { model: User },
     });
     return res.json(post);
-  } catch {
+  } catch (err) {
+    console.log(err);
     return res.sendStatus(500);
   }
 });
