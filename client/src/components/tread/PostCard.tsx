@@ -11,7 +11,6 @@ import {
   Container,
   Grid,
   Input,
-  TextField,
   Typography,
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
@@ -56,10 +55,11 @@ export default function PostCard({ post }: Props) {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-
     dispatch({ type: SEND_COMMENT, payload: { postId: post.id, input } });
-    // dispatch(addCommentThunk(input, post.id));
+    if (input.commentbody.length>0) {
+    dispatch(addCommentThunk(input, post.id));
     setInput({ commentbody: '' });
+    }
   };
 
   const deleteHandler = useCallback((id: number, isPost: boolean) => {

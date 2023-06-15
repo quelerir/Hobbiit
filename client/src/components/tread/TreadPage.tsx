@@ -14,8 +14,6 @@ import {
   Typography,
   CardActions,
   Button,
-  List,
-  ListItem,
 } from '@mui/material';
 import { useAppSelector, useAppDispatch } from '../../redux/hooks';
 import { getTreadThunk } from '../../redux/slices/treadsSlice';
@@ -49,11 +47,7 @@ export default function TreadPage({ darkMode, toggleDarkMode }: Props): JSX.Elem
   const [isSubscribed, setIsSubscribed] = useState(false);
 
   useEffect(() => {
-    dispatch(getTreadThunk(id));
-  }, []);
-
-  useEffect(() => {
-    dispatch(getPostsThunk(id));
+    dispatch(getPostsThunk(Number(id)));
   }, [id]);
 
   useEffect(() => {
@@ -61,7 +55,7 @@ export default function TreadPage({ darkMode, toggleDarkMode }: Props): JSX.Elem
   }, []);
 
   useEffect(() => {
-    dispatch(getSubscribersThunk(id));
+    dispatch(getSubscribersThunk(Number(id)));
   }, []);
 
   useEffect(() => {
@@ -75,10 +69,10 @@ export default function TreadPage({ darkMode, toggleDarkMode }: Props): JSX.Elem
   }, [userSelector?.id]);
 
   const subscribeHandler = () => {
-    dispatch(addSubscriberThunk(id));
+    dispatch(addSubscriberThunk(Number(id)));
   };
   const unfollowHandler = () => {
-    dispatch(deleteSubscriberThunk(id));
+    dispatch(deleteSubscriberThunk(Number(id)));
   };
 
   return (

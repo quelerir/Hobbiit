@@ -4,6 +4,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import type { PostType, PostFormType } from '../../types/PostTypes';
 import type { AppThunk } from '../hooks';
+import { UserType } from '../../types/UserTypes';
 
 export type PostsState = PostType[];
 
@@ -35,7 +36,7 @@ export const getPostsThunk =
   };
 
 export const addPostThunk =
-  (avatar, input: PostFormType, treadId: PostType['tread_id']): AppThunk =>
+  (avatar: UserType['avatar'], input: PostFormType, treadId: PostType['tread_id']): AppThunk =>
   (dispatch) => {
     const formData = new FormData();
     formData.append('avatar', avatar);
