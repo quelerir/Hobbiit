@@ -6,7 +6,7 @@ import axios from 'axios';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
 
-axios.defaults.baseURL = 'http://localhost:3001';
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 axios.defaults.withCredentials = true;
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <Provider store={store}>
